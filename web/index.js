@@ -17,6 +17,8 @@ const STATIC_PATH =
 
 const app = express();
 
+var globalSession;
+
 // Set up Shopify authentication and webhook handling
 app.get(shopify.config.auth.path, shopify.auth.begin());
 app.get(
@@ -38,12 +40,13 @@ app.get("/api/products/count", async (_req, res) => {
   const countData = await shopify.api.rest.Product.count({
     session: res.locals.shopify.session,
   });
+  globalSession = res.locals.shopify.session;
   res.status(200).send(countData);
 });
 
 app.get("/test", async (_req, res) => {
   const countData = await shopify.api.rest.Product.count({
-    session: res.locals.shopify.session,
+    session: globalSession,
   });
   res.status(200).send(countData);
 });
