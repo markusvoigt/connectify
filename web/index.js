@@ -46,7 +46,7 @@ app.get("/api/products/count", async (_req, res) => {
 
 app.get("/test", async (_req, res) => {
    const headers = _req.headers;
-  ​const authSession = await shopify.findSessionByShop(headers.x-shop-domain);
+  ​const authSession = await shopify.SessionStorage.findSessionsByShop(headers['x-shopify-shop-domain']);
   res.status(200).send(JSON.stringify(authSession));
 });
 
