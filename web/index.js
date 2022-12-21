@@ -3,10 +3,11 @@ import { join } from "path";
 import { readFileSync } from "fs";
 import express from "express";
 import serveStatic from "serve-static";
-
 import shopify from "./shopify.js";
 import productCreator from "./product-creator.js";
 import GDPRWebhookHandlers from "./gdpr.js";
+import { shopifyApp } from "@shopify/shopify-app-express";
+import Shopify from "@shopify/shopify-api";
 
 const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
 
@@ -45,9 +46,11 @@ app.get("/api/products/count", async (_req, res) => {
 });
 
 app.get("/test", async (_req, res) => {
-   const headers = _req.headers;
-  ​const authSession = await shopify.SessionStorage.findSessionsByShop(headers['x-shopify-shop-domain']);
-  res.status(200).send(JSON.stringify(authSession));
+  const headers = _req.headers;
+  const session = res.locals.shopify.loadOfflineSession(
+    headers["x-shopify-shop-domain"]
+  );
+  res.status(200).send(JSON.stringify(session));
 });
 
 app.get("/api/products/create", async (_req, res) => {
