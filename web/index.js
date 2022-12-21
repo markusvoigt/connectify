@@ -47,7 +47,7 @@ app.get("/api/products/count", async (_req, res) => {
 
 app.get("/test", async (_req, res) => {
   const headers = _req.headers;
-  const session = res.locals.shopify.loadOfflineSession(
+  const session = Shopify.Utils.loadOfflineSession(
     headers["x-shopify-shop-domain"]
   );
   res.status(200).send(JSON.stringify(session));
