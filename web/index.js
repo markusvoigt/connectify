@@ -6,10 +6,8 @@ import serveStatic from "serve-static";
 import shopify from "./shopify.js";
 import productCreator from "./product-creator.js";
 import GDPRWebhookHandlers from "./gdpr.js";
-import { shopifyApp } from "@shopify/shopify-app-express";
 import "@shopify/shopify-api/adapters/node";
 import { Session } from "@shopify/shopify-api";
-import { globalAgent } from "http";
 var globalSession;
 
 const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
@@ -27,7 +25,7 @@ var globalSession;
 app.get(shopify.config.auth.path, shopify.auth.begin());
 app.get(
   shopify.config.auth.callbackPath,
-  shopify.auth.callback(),
+  (globalSession = shopify.auth.callback()),
   shopify.redirectToShopifyOrAppRoot()
 );
 app.post(
@@ -37,9 +35,6 @@ app.post(
 
 // All endpoints after this point will require an active session
 app.use("/api/*", shopify.validateAuthenticatedSession());
-
-const response = shopify.auth.callback();
-globalSession = response.session.toObject();
 
 app.use(express.json());
 
@@ -53,10 +48,7 @@ app.get("/api/products/count", async (_req, res) => {
 
 app.get("/test", async (_req, res) => {
   const headers = _req.headers;
-  const countData = await shopify.api.rest.Product.count({
-    session: globalSession,
-  });
-  res.status(200).send(countData);
+  res.status(200).send(JSON.stringify(globalSession));
 });
 
 app.get("/api/products/create", async (_req, res) => {
