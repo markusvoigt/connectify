@@ -19,13 +19,11 @@ const STATIC_PATH =
 
 const app = express();
 
-var globalSession;
-
 // Set up Shopify authentication and webhook handling
 app.get(shopify.config.auth.path, shopify.auth.begin());
 app.get(
   shopify.config.auth.callbackPath,
-  (globalSession = shopify.auth.callback()),
+  shopify.auth.callback(),
   shopify.redirectToShopifyOrAppRoot()
 );
 app.post(
@@ -48,7 +46,10 @@ app.get("/api/products/count", async (_req, res) => {
 
 app.get("/test", async (_req, res) => {
   const headers = _req.headers;
-  res.status(200).send(JSON.stringify(globalSession));
+  const sessions = await shopify.config.sessionStorage.findSessionsByShop(
+    "markusvoigt.myshopify.com"
+  );
+  res.status(200).send(JSON.stringify(sessions));
 });
 
 app.get("/api/products/create", async (_req, res) => {
