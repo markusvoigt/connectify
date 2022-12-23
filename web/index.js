@@ -49,7 +49,14 @@ app.get("/test", async (_req, res) => {
   const sessions = await shopify.config.sessionStorage.findSessionsByShop(
     "markusvoigt.myshopify.com"
   );
-  res.status(200).send(JSON.stringify(sessions));
+  if (sessions.length > 0) {
+    const countData = await shopify.api.rest.Product.count({
+      session: sessions[0],
+    });
+    res.status(200).send(countData);
+  } else {
+    res.status(200).send("No session found");
+  }
 });
 
 app.get("/api/products/create", async (_req, res) => {
