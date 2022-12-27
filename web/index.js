@@ -46,10 +46,11 @@ app.get("/api/products/count", async (_req, res) => {
 
 app.get("/test", async (_req, res) => {
   const headers = _req.headers;
-  console.log(headers);
+  const shopDomain = "" + headers["x-shop-domain"];
   const sessions = await shopify.config.sessionStorage.findSessionsByShop(
-    "markusvoigt.myshopify.com"
+    shopDomain
   );
+
   if (sessions.length > 0) {
     const countData = await shopify.api.rest.Product.count({
       session: sessions[0],
