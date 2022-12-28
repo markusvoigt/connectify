@@ -8,7 +8,6 @@ import productCreator from "./product-creator.js";
 import GDPRWebhookHandlers from "./gdpr.js";
 import "@shopify/shopify-api/adapters/node";
 import { Session } from "@shopify/shopify-api";
-var globalSession;
 
 const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
 
@@ -50,7 +49,7 @@ app.get("/test", async (_req, res) => {
   const sessions = await shopify.config.sessionStorage.findSessionsByShop(
     shopDomain
   );
-
+  /*
   if (sessions.length > 0) {
     const countData = await shopify.api.rest.Product.count({
       session: sessions[0],
@@ -59,7 +58,48 @@ app.get("/test", async (_req, res) => {
   } else {
     res.status(200).send("No session found");
   }
+  */
+  const metaFieldDefinitions = getMetafieldDefinitionsForShop();
+  res.status(200).send(JSON.stringify(metaFieldDefinitions));
 });
+
+async function getSessionForShop(shop = "markusvoigt.myshopify.com"): Session {
+  const sessions = await shopify.config.sessionStorage.findSessionsByShop(shop);
+  if (sessions.length > 0) {
+    return sessions[0];
+  }
+}
+
+async function getMetafieldDefinitionsForShop(
+  shop = "markusvoigt.myshopify.com"
+) {
+  const session = getSessionForShop(shop);
+  const client = new shopify.api.clients.Graphql({
+    session: session,
+  });
+  const response = await client.query({
+    data: `query{
+      metafieldDefinitions(ownerType:CUSTOMER,first:10){
+        edges{
+          node{
+            key,
+            description,
+            type{
+              name
+            }
+          }
+        }
+      }
+    }`,
+  });
+  const metaFieldDefinitions = [];
+
+  for (const definition in response.body.data.metafieldDefinitions.edges) {
+    metaFieldDefinitions.push(definition.node);
+  }
+
+  return metaFieldDefinitions;
+}
 
 app.get("/api/products/create", async (_req, res) => {
   let status = 200;

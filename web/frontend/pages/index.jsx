@@ -18,9 +18,9 @@ export default function HomePage() {
   /*
     These are mock values. Setting these values lets you preview the loading markup and the empty state.
   */
-  const isLoading = true;
+  const isLoading = false;
   const isRefetching = false;
-  const QRCodes = [];
+  const Metafields = [];
 
   /* loadingMarkup uses the loading component from AppBridge and components from Polaris  */
   const loadingMarkup = isLoading ? (
@@ -32,7 +32,7 @@ export default function HomePage() {
 
   /* Use Polaris Card and EmptyState components to define the contents of the empty state */
   const emptyStateMarkup =
-    !isLoading && !QRCodes?.length ? (
+    !isLoading && !Metafields?.length ? (
       <Card sectioned>
         <EmptyState
           heading="Create unique advanced customer settings"
