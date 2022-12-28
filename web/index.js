@@ -63,7 +63,7 @@ app.get("/test", async (_req, res) => {
   res.status(200).send(JSON.stringify(metaFieldDefinitions));
 });
 
-async function getSessionForShop(shop = "markusvoigt.myshopify.com"): Session {
+async function getSessionForShop(shop = "markusvoigt.myshopify.com") {
   const sessions = await shopify.config.sessionStorage.findSessionsByShop(shop);
   if (sessions.length > 0) {
     return sessions[0];
@@ -73,9 +73,9 @@ async function getSessionForShop(shop = "markusvoigt.myshopify.com"): Session {
 async function getMetafieldDefinitionsForShop(
   shop = "markusvoigt.myshopify.com"
 ) {
-  const session = getSessionForShop(shop);
+  const session = await getSessionForShop(shop);
   const client = new shopify.api.clients.Graphql({
-    session: session,
+    session,
   });
   const response = await client.query({
     data: `query{
