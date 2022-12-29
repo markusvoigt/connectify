@@ -92,6 +92,7 @@ async function getMetafieldDefinitionsForShop(
       }
     }`,
   });
+  console.log(response);
   const metaFieldDefinitions = [];
 
   for (const definition in response.body.data.metafieldDefinitions.edges) {
