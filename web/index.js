@@ -98,7 +98,7 @@ async function getMetafieldDefinitionsForShop(
     metaFieldDefinitions.push(definition.node);
   }
 
-  return metaFieldDefinitions;
+  return response.body.data;
 }
 
 app.get("/api/products/create", async (_req, res) => {
