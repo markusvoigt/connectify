@@ -60,7 +60,7 @@ app.get("/test", async (_req, res) => {
   }
   */
   const metaFieldDefinitions = await getMetafieldDefinitionsForShop();
-  res.status(200).send(JSON.stringify(metaFieldDefinitions));
+  res.status(200).send(metaFieldDefinitions);
 });
 
 async function getSessionForShop(shop = "markusvoigt.myshopify.com") {
@@ -93,11 +93,10 @@ async function getMetafieldDefinitionsForShop(
     }`,
   });
   const metaFieldDefinitions = [];
-  console.log(JSON.stringify(response.body.data.metafieldDefinitions));
   for (const definition in response.body.data.metafieldDefinitions.edges) {
     metaFieldDefinitions.push(definition.node);
   }
-
+  console.log(JSON.stringify(metaFieldDefinitions));
   return metaFieldDefinitions;
 }
 
