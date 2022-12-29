@@ -59,7 +59,7 @@ app.get("/test", async (_req, res) => {
     res.status(200).send("No session found");
   }
   */
-  const metaFieldDefinitions = getMetafieldDefinitionsForShop();
+  const metaFieldDefinitions = await getMetafieldDefinitionsForShop();
   res.status(200).send(JSON.stringify(metaFieldDefinitions));
 });
 
@@ -92,14 +92,13 @@ async function getMetafieldDefinitionsForShop(
       }
     }`,
   });
-  console.log(response);
   const metaFieldDefinitions = [];
 
   for (const definition in response.body.data.metafieldDefinitions.edges) {
     metaFieldDefinitions.push(definition.node);
   }
 
-  return response.body.data;
+  return metaFieldDefinitions;
 }
 
 app.get("/api/products/create", async (_req, res) => {
