@@ -93,7 +93,7 @@ async function getMetafieldDefinitionsForShop(
     }`,
   });
   const metaFieldDefinitions = [];
-  for (const definition in response.body.data.metafieldDefinitions.edges) {
+  for (let definition of response.body.data.metafieldDefinitions.edges) {
     console.log(definition);
     metaFieldDefinitions.push(definition.node);
   }
