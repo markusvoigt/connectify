@@ -1,0 +1,12 @@
+<span style="color: {{ block.settings.color }}"> Advanced customer settings & preferences </span>
+{% render 'app_snippet' %}
+{% schema %}
+{
+  "name": "Customer Metafield",
+  "target": "section",
+  "stylesheet": "app.css",
+  "javascript": "app.js",
+  "templates": ["customers/account"],
+  "settings": [{ "label": "Color", "id": "color", "type": "color", "default": "#000000" }]
+}
+{% endschema %}
