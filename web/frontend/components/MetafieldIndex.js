@@ -1,14 +1,11 @@
 import { useNavigate } from "@shopify/app-bridge-react";
 import {
   Card,
-  Icon,
   IndexTable,
   Stack,
   TextStyle,
-  Thumbnail,
   UnstyledLink,
 } from "@shopify/polaris";
-import { DiamondAlertMajor, ImageMajor } from "@shopify/polaris-icons";
 
 import { useMedia } from "@shopify/react-hooks";
 
