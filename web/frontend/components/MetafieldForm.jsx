@@ -67,7 +67,6 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
       namespace,
       key,
       description,
-      contentType
     },
     dirty,
     reset,
@@ -91,9 +90,8 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
       description: useField({
         value: Metafield?.description || ""
       }),
-      contentType: useList({
-        value: Metafield?.contentType || "single_line_text_field",
-        options,
+      contentType: useField({
+        value: Metafield?.contentType || "single_line_text_field"
       })
     },
     onSubmit,
@@ -160,8 +158,8 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
               <Card sectioned title="contentType">
                 <Select
                     label="Content Type"
-                    value={Metafield?.type.name}
                     options={options}
+                    {...type.name}
                     />
               </Card>
 
