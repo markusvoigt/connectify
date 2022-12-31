@@ -157,6 +157,13 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
                   helpText="Used to for internal reference"
                 />
               </Card>
+              <Card sectioned title="contentType">
+                <Select
+                    label="Content Type"
+                    value={...contentType}
+                    options={options}
+                    />
+              </Card>
 
             </FormLayout>
           </Form>
@@ -165,38 +172,4 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
   );
 }
 
-/* Builds a URL to the selected product */
-function productViewURL({ host, productHandle, discountCode }) {
-  const url = new URL(host);
-  const productPath = `/products/${productHandle}`;
 
-  /*
-    If a discount is selected, then build a URL to the selected discount that redirects to the selected product: /discount/{code}?redirect=/products/{product}
-  */
-  if (discountCode) {
-    url.pathname = `/discount/${discountCode}`;
-    url.searchParams.append("redirect", productPath);
-  } else {
-    url.pathname = productPath;
-  }
-
-  return url.toString();
-}
-
-/* Builds a URL to a checkout that contains the selected product */
-function productCheckoutURL({ host, variantId, quantity = 1, discountCode }) {
-  const url = new URL(host);
-  const id = variantId.replace(
-    /gid:\/\/shopify\/ProductVariant\/([0-9]+)/,
-    "$1"
-  );
-
-  url.pathname = `/cart/${id}:${quantity}`;
-
-  /* Builds a URL to a checkout that contains the selected product with a discount code applied */
-  if (discountCode) {
-    url.searchParams.append("discount", discountCode);
-  }
-
-  return url.toString();
-}
