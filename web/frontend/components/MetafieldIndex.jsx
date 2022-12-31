@@ -83,9 +83,6 @@ export function MetafieldIndex({ Metafields, loading }) {
               {truncate(name, 25)}
             </UnstyledLink>
           </IndexTable.Cell>
-          <IndexTable.Cell>
-            <Stack></Stack>
-          </IndexTable.Cell>
           <IndexTable.Cell>{namespace + "." + key}</IndexTable.Cell>
           <IndexTable.Cell>{description}</IndexTable.Cell>
           <IndexTable.Cell>{contentType}</IndexTable.Cell>
