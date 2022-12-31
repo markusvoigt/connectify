@@ -6,7 +6,6 @@ import {
   FormLayout,
   TextField,
   Button,
-  ChoiceList,
   Select,
   Thumbnail,
   Icon,
