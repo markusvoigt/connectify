@@ -14,6 +14,7 @@ import {
   TextStyle,
   Layout,
   EmptyState,
+  ChoiceList,
 } from "@shopify/polaris";
 import {
   ContextualSaveBar,
@@ -27,9 +28,16 @@ import { ImageMajor, AlertMinor } from "@shopify/polaris-icons";
 import { useAuthenticatedFetch, useAppQuery } from "../hooks";
 
 /* Import custom hooks for forms */
-import { useForm, useField, notEmptyString } from "@shopify/react-form";
+import { useForm, useField, notEmptyString, useList } from "@shopify/react-form";
 
 
+const options = [
+    {label: 'Date', value: "date"},
+    {label: 'Number Integer', value: 'number_integer'},
+    {label: 'String', value: 'single_line_text_field'},
+    {label: 'Multi line text', value: 'multi_line_text_field'},
+    {label: "JSON", value:"json"},
+  ];
 
 export function MetafieldForm({ Metafield: InitialMetafield }) {
   const [Metafield, setMetafield] = useState(InitialMetafield);
@@ -57,7 +65,8 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
   const {
     fields: {
       name,
-      namespaceAndKey,
+      namespace,
+      key,
       description,
       contentType
     },
@@ -72,16 +81,21 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
         value: Metafield?.name || "",
         validates: [notEmptyString("Please provide a name.")],
       }),
-      namespaceAndKey: useField({
-        value: Metafield?.namespaceAndKey || "",
-        validates: [notEmptyString("Please provide the namespace and key.")],
+      namespace: useField({
+        value: Metafield?.namespace || "custom",
+        validates: [notEmptyString("Please provide the namespace.")],
+      }),
+      key: useField({
+        value: Metafield?.key || "",
+        validates: [notEmptyString("Please provide thekey.")],
       }),
       description: useField({
         value: Metafield?.description || ""
       }),
-      contentType: useField({
-        value: Metafield?.conte || ""
-      }),
+      contentType: useList({
+        value: Metafield?.contentType || "single_line_text_field",
+        options,
+      })
     },
     onSubmit,
   });
@@ -120,10 +134,18 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
                 />
               </Card>
 
-              <Card sectioned title="namespaceAndKey">
+              <Card sectioned title="namespace">
                 <TextField
-                  {...namespaceAndKey}
-                  label="Namespace and Key"
+                  {...namespace}
+                  label="Namespace"
+                  labelHidden
+                  helpText="Used to reference this metafield"
+                />
+              </Card>
+              <Card sectioned title="key">
+                <TextField
+                  {...key}
+                  label="Key"
                   labelHidden
                   helpText="Used to reference this metafield"
                 />

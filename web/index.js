@@ -82,8 +82,10 @@ async function getMetafieldDefinitionsForShop(
       metafieldDefinitions(ownerType:CUSTOMER,first:10){
         edges{
           node{
+            name,
             key,
             description,
+            namespace,
             type{
               name
             }
