@@ -32,7 +32,7 @@ export default function HomePage() {
   ];
 
   const metafieldMarkup = Metafields?.length ? (
-    <MetafieldIndex metafields={Metafields} loading={isRefetching}/>
+    <MetafieldIndex Metafields={Metafields} loading={isRefetching}/>
   ) : null;
 
   /* loadingMarkup uses the loading component from AppBridge and components from Polaris  */
