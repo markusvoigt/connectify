@@ -9,9 +9,8 @@ import {
   UnstyledLink,
 } from "@shopify/polaris";
 import { DiamondAlertMajor, ImageMajor } from "@shopify/polaris-icons";
-/
-import { useMedia } from "@shopify/react-hooks";
 
+import { useMedia } from "@shopify/react-hooks";
 
 /* Markup for small screen sizes (mobile) */
 function SmallScreenCard({
@@ -32,16 +31,14 @@ function SmallScreenCard({
             <Stack vertical={true}>
               <Stack.Item>
                 <p>
-                  <TextStyle variation="strong">
-                    {truncate(name, 35)}
-                  </TextStyle>
+                  <TextStyle variation="strong">{truncate(name, 35)}</TextStyle>
                 </p>
                 <p>{truncate(description, 35)}</p>
               </Stack.Item>
               <div style={{ display: "flex" }}>
                 <div style={{ flex: "3" }}>
                   <TextStyle variation="subdued">Namespace and key</TextStyle>
-                  <p>{namespace+"."+key}</p>
+                  <p>{namespace + "." + key}</p>
                 </div>
                 <div style={{ flex: "2" }}>
                   <TextStyle variation="subdued">Content Type:</TextStyle>
@@ -74,7 +71,6 @@ export function MetafieldIndex({ Metafields, loading }) {
 
   const rowMarkup = Metafields.map(
     ({ key, name, namespace, description, contentType }, index) => {
-
       /* The form layout, created using Polaris components. Includes the QR code data set above. */
       return (
         <IndexTable.Row
@@ -91,13 +87,10 @@ export function MetafieldIndex({ Metafields, loading }) {
             </UnstyledLink>
           </IndexTable.Cell>
           <IndexTable.Cell>
-            <Stack>
-            </Stack>
+            <Stack></Stack>
           </IndexTable.Cell>
-          <IndexTable.Cell>{namespace+"."+key}</IndexTable.Cell>
-          <IndexTable.Cell>
-            {description}
-          </IndexTable.Cell>
+          <IndexTable.Cell>{namespace + "." + key}</IndexTable.Cell>
+          <IndexTable.Cell>{description}</IndexTable.Cell>
           <IndexTable.Cell>{contentType}</IndexTable.Cell>
         </IndexTable.Row>
       );
