@@ -67,6 +67,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
       namespace,
       key,
       description,
+      contentType
     },
     dirty,
     reset,
