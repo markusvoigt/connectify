@@ -6,6 +6,7 @@ import {
   Page,
   SkeletonBodyText,
 } from "@shopify/polaris";
+import { MetafieldIndex } from "../components";
 
 export default function HomePage() {
   /*
@@ -20,7 +21,19 @@ export default function HomePage() {
   */
   const isLoading = false;
   const isRefetching = false;
-  const Metafields = [];
+  const Metafields = [
+    {
+      name: "Date of birth",
+      key: "dob",
+      namespace: "custom",
+      description: "Bla bla bla",
+      contentType: "date"
+    }
+  ];
+
+  const metafieldMarkup = Metafields?.length ? (
+    <MetafieldIndex metafields={Metafields} loading={isRefetching}/>
+  ) : null;
 
   /* loadingMarkup uses the loading component from AppBridge and components from Polaris  */
   const loadingMarkup = isLoading ? (
@@ -55,7 +68,7 @@ export default function HomePage() {
     and include the empty state contents set above.
   */
   return (
-    <Page>
+    <Page fullWidth={!!metafieldMarkup}>
       <TitleBar
         title="Metafields"
         primaryAction={{
@@ -66,6 +79,7 @@ export default function HomePage() {
       <Layout>
         <Layout.Section>
           {loadingMarkup}
+          {metafieldMarkup}
           {emptyStateMarkup}
         </Layout.Section>
       </Layout>

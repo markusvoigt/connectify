@@ -123,7 +123,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
               fullWidth
             />
             <FormLayout>
-              <Card sectioned title="name">
+              <Card sectioned title="Name">
                 <TextField
                   {...name}
                   label="Name"
@@ -132,7 +132,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
                 />
               </Card>
 
-              <Card sectioned title="namespace">
+              <Card sectioned title="Namespace (e.g. custom)">
                 <TextField
                   {...namespace}
                   label="Namespace"
@@ -140,7 +140,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
                   helpText="Used to reference this metafield"
                 />
               </Card>
-              <Card sectioned title="key">
+              <Card sectioned title="Key">
                 <TextField
                   {...key}
                   label="Key"
@@ -148,7 +148,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
                   helpText="Used to reference this metafield"
                 />
               </Card>
-              <Card sectioned title="description">
+              <Card sectioned title="Description">
                 <TextField
                   {...description}
                   label="Description"
@@ -156,7 +156,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
                   helpText="Used to for internal reference"
                 />
               </Card>
-              <Card sectioned title="contentType">
+              <Card sectioned title="Content type for the metafield">
                 <Select
                     label="Content Type"
                     options={options}
