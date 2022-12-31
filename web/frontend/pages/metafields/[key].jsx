@@ -9,7 +9,7 @@ export default function MetafieldEdit() {
      These are mock values.
      Set isLoading to false to preview the page without loading markup.
   */
-  const isLoading = true;
+  const isLoading = false;
   const isRefetching = false;
   const Metafield = {
     key: "dob",
