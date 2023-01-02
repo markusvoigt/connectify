@@ -52,7 +52,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
     (body) => {
       (async () => {
         const parsedBody = body;
-        parsedBody.contentType = body.contentType[0];
+
         const url = Metafield ? "/api/metafieldUpdate" : "/api/metafieldCreate"
 
         const response = await fetch(url, {
