@@ -15,7 +15,7 @@ function SmallScreenCard({
   key,
   namespace,
   description,
-  contentType,
+  type,
   navigate,
 }) {
   return (
@@ -39,7 +39,7 @@ function SmallScreenCard({
                 </div>
                 <div style={{ flex: "2" }}>
                   <TextStyle variation="subdued">Content Type:</TextStyle>
-                  <p>{contentType}</p>
+                  <p>{type.name}</p>
                 </div>
               </div>
             </Stack>
@@ -67,7 +67,7 @@ export function MetafieldIndex({ Metafields, loading }) {
   };
 
   const rowMarkup = Metafields.map(
-    ({ key, name, namespace, description, contentType }, index) => {
+    ({ key, name, namespace, description, type }, index) => {
       /* The form layout, created using Polaris components. Includes the QR code data set above. */
       return (
         <IndexTable.Row
@@ -85,7 +85,7 @@ export function MetafieldIndex({ Metafields, loading }) {
           </IndexTable.Cell>
           <IndexTable.Cell>{namespace + "." + key}</IndexTable.Cell>
           <IndexTable.Cell>{description}</IndexTable.Cell>
-          <IndexTable.Cell>{contentType}</IndexTable.Cell>
+          <IndexTable.Cell>{type.name}</IndexTable.Cell>
         </IndexTable.Row>
       );
     }

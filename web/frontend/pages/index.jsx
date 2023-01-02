@@ -7,6 +7,9 @@ import {
   SkeletonBodyText,
 } from "@shopify/polaris";
 import { MetafieldIndex } from "../components";
+import { useAppQuery } from "../hooks";
+
+
 
 export default function HomePage() {
   /*
@@ -19,17 +22,21 @@ export default function HomePage() {
   /*
     These are mock values. Setting these values lets you preview the loading markup and the empty state.
   */
-  const isLoading = false;
-  const isRefetching = false;
-  const Metafields = [
-    {
-      name: "Date of birth",
-      key: "dob",
-      namespace: "custom",
-      description: "Bla bla bla",
-      contentType: "date"
-    }
-  ];
+
+  const {
+    data: Metafields,
+    isLoading,
+  
+    /*
+      react-query provides stale-while-revalidate caching.
+      By passing isRefetching to Index Tables we can show stale data and a loading state.
+      Once the query refetches, IndexTable updates and the loading state is removed.
+      This ensures a performant UX.
+    */
+    isRefetching,
+  } = useAppQuery({
+    url: "/api/metafields",
+  });
 
   const metafieldMarkup = Metafields?.length ? (
     <MetafieldIndex Metafields={Metafields} loading={isRefetching}/>
