@@ -164,13 +164,6 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
                 />
               </Card>
               <Card sectioned title="Content type for the metafield">
-                <Select
-                    label="Content Type"
-                    options={options}
-                    onchange={handleContentTypeChange}
-                    value={contentType.value}
-                    labelHidden
-                    />
                     <ChoiceList
                     title="Scan destination"
                     titleHidden
