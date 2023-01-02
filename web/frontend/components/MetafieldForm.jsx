@@ -96,7 +96,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
       }),
       key: useField({
         value: Metafield?.key || "",
-        validates: [notEmptyString("Please provide thekey.")],
+        validates: [notEmptyString("Please provide the key.")],
       }),
       description: useField(Metafield?.description || ""
       ),
@@ -106,7 +106,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
   });
 
   const handleContentTypeChange = useCallback((type) => {
-    contentType.value=type;
+    contentType.onChange(type);
   }, []);
 
 
@@ -170,7 +170,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
                     label="Content Type"
                     options={options}
                     onchange={handleContentTypeChange}
-                    value={contentType}
+                    value={contentType.value}
                     labelHidden
                     />
               </Card>
