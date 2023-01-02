@@ -60,15 +60,16 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
           body: JSON.stringify(parsedBody),
           headers: { "Content-Type": "application/json" },
         });
-         if (response.ok){
-          navigate(`/metafields/${body.key}`);
-         }else console.log(JSON.stringify(response));
+         
+          //navigate(`/metafields/${body.key}`);
+         console.log(JSON.stringify(response));
+         setMetafield(JSON.parse(parsedBody));
 
         console.log(`Metafield: ${JSON.stringify(Metafield)}`);
         console.log(`parsedBody: ${JSON.stringify(parsedBody)}`);
       })();
       return { status: "success" };
-    });
+    },[Metafield, setMetafield]);
 
   /*
     Sets up the form state with the useForm hook.
