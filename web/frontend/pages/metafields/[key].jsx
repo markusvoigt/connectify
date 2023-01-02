@@ -1,6 +1,8 @@
 import { Card, Page, Layout, SkeletonBodyText } from "@shopify/polaris";
 import { Loading, TitleBar } from "@shopify/app-bridge-react";
 import { MetafieldForm } from "../../components";
+import { useParams } from "react-router-dom";
+import { useAppQuery } from "../../hooks";
 
 export default function MetafieldEdit() {
   const breadcrumbs = [{ content: "Metafields", url: "/" }];
