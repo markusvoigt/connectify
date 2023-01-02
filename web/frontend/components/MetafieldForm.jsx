@@ -150,7 +150,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
               </Card>
               <Card sectioned title="Description">
                 <TextField
-                  {...description}
+                  {...description.value}
                   label="Description"
                   labelHidden
                   helpText="Used to for internal reference"
