@@ -40,7 +40,6 @@ const options = [
 
 export function MetafieldForm({ Metafield: InitialMetafield }) {
   const [Metafield, setMetafield] = useState(InitialMetafield);
-  const [showResourcePicker, setShowResourcePicker] = useState(false);
   const navigate = useNavigate();
   const appBridge = useAppBridge();
   const fetch = useAuthenticatedFetch();
@@ -93,9 +92,8 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
         value: Metafield?.key || "",
         validates: [notEmptyString("Please provide thekey.")],
       }),
-      description: useField({
-        value: Metafield?.description || ""
-      }),
+      description: useField(Metafield?.description || ""
+      ),
       contentType: useField({
         value: Metafield?.type.name || "single_line_text_field"
       })
@@ -155,7 +153,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
               </Card>
               <Card sectioned title="Description">
                 <TextField
-                  {...description.value}
+                  {...description}
                   label="Description"
                   labelHidden
                   helpText="Used to for internal reference"
