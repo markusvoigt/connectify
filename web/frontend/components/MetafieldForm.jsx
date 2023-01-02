@@ -27,7 +27,7 @@ import { ImageMajor, AlertMinor } from "@shopify/polaris-icons";
 import { useAuthenticatedFetch, useAppQuery } from "../hooks";
 
 /* Import custom hooks for forms */
-import { useForm, useField, notEmptyString, useList } from "@shopify/react-form";
+import { useForm, useField, notEmptyString } from "@shopify/react-form";
 
 
 const options = [
@@ -60,8 +60,9 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
           body: JSON.stringify(parsedBody),
           headers: { "Content-Type": "application/json" },
         });
-         
-          navigate(`/metafields/${body.key}`);
+
+         makeClean();
+        navigate(`/metafields/${body.key}`);
 
          //setMetafield(JSON.parse(parsedBody));
 
@@ -69,7 +70,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
         console.log(`parsedBody: ${JSON.stringify(parsedBody)}`);
       })();
       return { status: "success" };
-    },[]);
+    },[Metafield]);
 
   /*
     Sets up the form state with the useForm hook.
