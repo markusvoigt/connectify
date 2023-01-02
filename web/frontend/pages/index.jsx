@@ -70,7 +70,7 @@ export default function HomePage() {
   return (
     <Page fullWidth={!!metafieldMarkup}>
       <TitleBar
-        title="Metafields"
+        title="Public Customer Metafields"
         primaryAction={{
           content: "Create new metafield",
           onAction: () => navigate("/metafields/new"),

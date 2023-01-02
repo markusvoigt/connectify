@@ -43,6 +43,65 @@ app.get("/api/products/count", async (_req, res) => {
   res.status(200).send(countData);
 });
 
+app.get("/api/metafields/:key", async (_req, res) => {
+  const client = new shopify.api.clients.Graphql({
+    session: res.locals.shopify.session,
+  });
+  const response = await client.query({
+    data: `query{
+      metafieldDefinitions(ownerType:CUSTOMER,first:10){
+        edges{
+          node{
+            name,
+            key,
+            description,
+            namespace,
+            type{
+              name
+            }
+          }
+        }
+      }
+    }`,
+  });
+  const metaFieldDefinitions = [];
+  for (let definition of response.body.data.metafieldDefinitions.edges) {
+    metaFieldDefinitions.push(definition.node);
+  }
+  const filterd = metaFieldDefinitions.filter(
+    (definition) => definition.key === _req.params.key
+  );
+  res.status(200).send(filterd[0]);
+});
+
+app.get("/api/metafields", async (_req, res) => {
+  const client = new shopify.api.clients.Graphql({
+    session: res.locals.shopify.session,
+  });
+  const response = await client.query({
+    data: `query{
+      metafieldDefinitions(ownerType:CUSTOMER,first:10){
+        edges{
+          node{
+            name,
+            key,
+            description,
+            namespace,
+            type{
+              name
+            }
+          }
+        }
+      }
+    }`,
+  });
+  const metaFieldDefinitions = [];
+  for (let definition of response.body.data.metafieldDefinitions.edges) {
+    metaFieldDefinitions.push(definition.node);
+  }
+  res.status(200).send(metaFieldDefinitions);
+});
+
 app.get("/test", async (_req, res) => {
   const headers = _req.headers;
   const shopDomain = "" + headers["x-shop-domain"];
