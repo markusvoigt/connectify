@@ -99,7 +99,9 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
     onSubmit,
   });
 
-
+  const handleContentTypeChange = useCallback((type) => {
+    contentType.onChange(type);
+  }, []);
 
 
   /* The form layout, created using Polaris and App Bridge components. */
@@ -158,13 +160,13 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
                 />
               </Card>
               <Card sectioned title="Content type for the metafield">
-              <ChoiceList
-                    title="Content type for the metafield"
-                    titleHidden
-                    choices={options}
-                    selected={contentType.value}
-                    onChange={contentType.onChange}
-                  />
+                <Select
+                    label="Content Type"
+                    options={options}
+                    onchange={handleContentTypeChange}
+                    value={contentType.value}
+                    labelHidden
+                    />
               </Card>
 
             </FormLayout>
