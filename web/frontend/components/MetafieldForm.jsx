@@ -44,7 +44,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
   const navigate = useNavigate();
   const appBridge = useAppBridge();
   const fetch = useAuthenticatedFetch();
-    
+    console.log(`Metafield: ${JSON.stringify(Metafield)}`)
   /*
     This is a placeholder function that is triggered when the user hits the "Save" button.
 
@@ -92,7 +92,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
         value: Metafield?.description || ""
       }),
       contentType: useField({
-        value: Metafield?.contentType || "single_line_text_field"
+        value: Metafield?.type.name || "single_line_text_field"
       })
     },
     onSubmit,
