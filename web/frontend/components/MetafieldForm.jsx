@@ -52,6 +52,11 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
     (body) => {
      // (async () => {
         const parsedBody = body;
+        if (!Metafield){
+          // create new definition
+        }else{
+          // update existing definition
+        }
         console.log(`Metafield: ${JSON.stringify(Metafield)}`);
         console.log(`parsedBody: ${JSON.stringify(parsedBody)}`);
      // })
@@ -101,7 +106,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
   });
 
   const handleContentTypeChange = useCallback((type) => {
-    contentType.onChange(type);
+    contentType.value=type;
   }, []);
 
 
@@ -165,7 +170,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
                     label="Content Type"
                     options={options}
                     onchange={handleContentTypeChange}
-                    value={contentType.value}
+                    value={contentType}
                     labelHidden
                     />
               </Card>
