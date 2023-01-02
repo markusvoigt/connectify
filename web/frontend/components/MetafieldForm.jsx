@@ -160,7 +160,8 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
                 <Select
                     label="Content Type"
                     options={options}
-                    {...contentType}
+                    value={contentType.value}
+                    {...contentType.value}
                     />
               </Card>
 
