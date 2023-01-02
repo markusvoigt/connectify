@@ -56,7 +56,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
         const url = Metafield ? "/api/metafieldUpdate" : "/api/metafieldCreate"
 
         const response = await fetch(url, {
-          method,
+          method:"POST",
           body: JSON.stringify(parsedBody),
           headers: { "Content-Type": "application/json" },
         });
