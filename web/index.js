@@ -18,6 +18,35 @@ const STATIC_PATH =
 
 const app = express();
 
+const METAFIELDS_QUERY = `query{
+  metafieldDefinitions(ownerType:CUSTOMER,first:10){
+    edges{
+      node{
+        name,
+        key,
+        description,
+        namespace,
+        type{
+          name
+        }
+      }
+    }
+  }
+}`;
+
+const METAFIELD_CREATE_QUERY = `
+mutation metafieldDefinitionCreate($definition: MetafieldDefinitionInput!) {
+  metafieldDefinitionCreate(definition: $definition) {
+    createdDefinition {
+      key
+    }
+    userErrors {
+      field
+      message
+    }
+  }
+}`;
+
 // Set up Shopify authentication and webhook handling
 app.get(shopify.config.auth.path, shopify.auth.begin());
 app.get(
@@ -48,21 +77,7 @@ app.get("/api/metafields/:key", async (_req, res) => {
     session: res.locals.shopify.session,
   });
   const response = await client.query({
-    data: `query{
-      metafieldDefinitions(ownerType:CUSTOMER,first:10){
-        edges{
-          node{
-            name,
-            key,
-            description,
-            namespace,
-            type{
-              name
-            }
-          }
-        }
-      }
-    }`,
+    data: METAFIELDS_QUERY,
   });
   const metaFieldDefinitions = [];
   for (let definition of response.body.data.metafieldDefinitions.edges) {
@@ -79,27 +94,41 @@ app.get("/api/metafields", async (_req, res) => {
     session: res.locals.shopify.session,
   });
   const response = await client.query({
-    data: `query{
-      metafieldDefinitions(ownerType:CUSTOMER,first:10){
-        edges{
-          node{
-            name,
-            key,
-            description,
-            namespace,
-            type{
-              name
-            }
-          }
-        }
-      }
-    }`,
+    data: METAFIELDS_QUERY,
   });
   const metaFieldDefinitions = [];
   for (let definition of response.body.data.metafieldDefinitions.edges) {
     metaFieldDefinitions.push(definition.node);
   }
   res.status(200).send(metaFieldDefinitions);
+});
+
+app.post("/api/metafieldCreate", async (_req, res) => {
+  const client = new shopify.api.clients.Graphql({
+    session: res.locals.shopify.session,
+  });
+  try {
+    client.query({
+      data: {
+        query: METAFIELD_CREATE_QUERY,
+        variables: {
+          definition: {
+            description: _req.body.description,
+            key: _req.body.key,
+            name: _req.body.name,
+            namespace: _req.body.namespace,
+            ownerType: "CUSTOMER",
+            pin: false,
+            type: _req.body.type,
+            visibleToStorefrontApi: true,
+          },
+        },
+      },
+    });
+  } catch (e) {
+    res.status(500).send(e.message);
+  }
+  res.status(200).send(`Metafield with key ${req_.body.key} created`);
 });
 
 app.get("/test", async (_req, res) => {

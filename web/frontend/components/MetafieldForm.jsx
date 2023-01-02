@@ -44,13 +44,18 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
   const navigate = useNavigate();
   const appBridge = useAppBridge();
   const fetch = useAuthenticatedFetch();
-    console.log(`Metafield: ${JSON.stringify(Metafield)}`)
   /*
     This is a placeholder function that is triggered when the user hits the "Save" button.
 
     It will be replaced by a different function when the frontend is connected to the backend.
   */
-  const onSubmit = (body) => console.log("submit", body);
+  const onSubmit = useCallback(
+    (body) => {
+      (async () => {
+        const parsedBody = body;
+        console.log(`Metafield: ${JSON.stringify(Metafield)}`);
+        console.log(`parsedBody: ${JSON.stringify(parsedBody)}`);
+      })});
 
   /*
     Sets up the form state with the useForm hook.
