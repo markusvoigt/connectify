@@ -51,8 +51,6 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
   const onSubmit = useCallback(
     (body) => {
       (async () => {
-
-      
         const parsedBody = body;
         parsedBody.contentType = body.contentType[0];
         const url = Metafield ? "/api/metafieldUpdate" : "/api/metafieldCreate"
@@ -64,11 +62,12 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
         });
          if (response.ok){
           navigate(`/metafields/${body.key}`);
-         }
+         }else console.log(JSON.stringify(response));
 
         console.log(`Metafield: ${JSON.stringify(Metafield)}`);
         console.log(`parsedBody: ${JSON.stringify(parsedBody)}`);
-      })
+      })();
+      return { status: "success" };
     });
 
   /*
