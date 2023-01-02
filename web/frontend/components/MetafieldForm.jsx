@@ -44,7 +44,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
   const navigate = useNavigate();
   const appBridge = useAppBridge();
   const fetch = useAuthenticatedFetch();
-
+    
   /*
     This is a placeholder function that is triggered when the user hits the "Save" button.
 
