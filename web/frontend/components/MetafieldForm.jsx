@@ -50,16 +50,25 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
   */
   const onSubmit = useCallback(
     (body) => {
-     // (async () => {
+      (async () => {
+
+      
         const parsedBody = body;
-        if (!Metafield){
-          // create new definition
-        }else{
-          // update existing definition
-        }
+        parsedBody.contentType = body.contentType[0];
+        const url = Metafield ? "/api/metafieldUpdate" : "/api/metafieldCreate"
+
+        const response = await fetch(url, {
+          method,
+          body: JSON.stringify(parsedBody),
+          headers: { "Content-Type": "application/json" },
+        });
+         if (response.ok){
+          navigate(`/metafields/${body.key}`);
+         }
+
         console.log(`Metafield: ${JSON.stringify(Metafield)}`);
         console.log(`parsedBody: ${JSON.stringify(parsedBody)}`);
-     // })
+      })
     });
 
   /*

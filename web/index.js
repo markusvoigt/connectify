@@ -47,6 +47,19 @@ mutation metafieldDefinitionCreate($definition: MetafieldDefinitionInput!) {
   }
 }`;
 
+const METAFIELD_UPDATE_QUERY = `
+mutation metafieldDefinitionUpdate($definition: MetafieldDefinitionUpdateInput!) {
+  metafieldDefinitionUpdate(definition: $definition) {
+    updatedDefinition {
+      key
+    }
+    userErrors {
+      field
+      message
+    }
+  }
+}`;
+
 // Set up Shopify authentication and webhook handling
 app.get(shopify.config.auth.path, shopify.auth.begin());
 app.get(
@@ -128,7 +141,35 @@ app.post("/api/metafieldCreate", async (_req, res) => {
   } catch (e) {
     res.status(500).send(e.message);
   }
-  res.status(200).send(`Metafield with key ${req_.body.key} created`);
+  res.status(200).send(`Metafield with key ${_req.body.key} created`);
+});
+
+app.post("/api/metafieldUpdate", async (_req, res) => {
+  const client = new shopify.api.clients.Graphql({
+    session: res.locals.shopify.session,
+  });
+  try {
+    client.query({
+      data: {
+        query: METAFIELD_UPDATE_QUERY,
+        variables: {
+          definition: {
+            description: _req.body.description,
+            key: _req.body.key,
+            name: _req.body.name,
+            namespace: _req.body.namespace,
+            ownerType: "CUSTOMER",
+            pin: false,
+            type: _req.body.type,
+            visibleToStorefrontApi: true,
+          },
+        },
+      },
+    });
+  } catch (e) {
+    res.status(500).send(e.message);
+  }
+  res.status(200).send(`Metafield with key ${_req.body.key} updated`);
 });
 
 app.get("/test", async (_req, res) => {
