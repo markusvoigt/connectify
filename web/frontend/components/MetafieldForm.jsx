@@ -94,9 +94,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
       }),
       description: useField(Metafield?.description || ""
       ),
-      contentType: useField({
-        value: Metafield?.type.name || "single_line_text_field"
-      })
+      contentType: useField(Metafield?.type.name || "single_line_text_field")
     },
     onSubmit,
   });
@@ -163,8 +161,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
                 <Select
                     label="Content Type"
                     options={options}
-                    value={contentType.value}
-                    {...contentType.value}
+                    value={contentType}
                     />
               </Card>
 
