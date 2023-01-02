@@ -50,11 +50,12 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
   */
   const onSubmit = useCallback(
     (body) => {
-      (async () => {
+     // (async () => {
         const parsedBody = body;
         console.log(`Metafield: ${JSON.stringify(Metafield)}`);
         console.log(`parsedBody: ${JSON.stringify(parsedBody)}`);
-      })});
+     // })
+    });
 
   /*
     Sets up the form state with the useForm hook.
