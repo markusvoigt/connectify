@@ -170,7 +170,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
                     label="Content Type"
                     options={options}
                     onchange={handleContentTypeChange}
-                    value={contentType.value}
+                    value={contentType}
                     labelHidden
                     />
               </Card>
