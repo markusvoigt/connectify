@@ -106,7 +106,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
   });
 
   const handleContentTypeChange = useCallback((type) => {
-    contentType.onChange(type);
+    contentType.value.onChange(type);
   }, []);
 
 
@@ -170,7 +170,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
                     label="Content Type"
                     options={options}
                     onchange={handleContentTypeChange}
-                    value={contentType}
+                    value={contentType.value}
                     labelHidden
                     />
               </Card>
