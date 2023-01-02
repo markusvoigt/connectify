@@ -158,12 +158,13 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
                 />
               </Card>
               <Card sectioned title="Content type for the metafield">
-                <Select
-                    label="Content Type"
-                    options={options}
-                    value={contentType}
-                    {...contentType}
-                    />
+              <ChoiceList
+                    title="Content type for the metafield"
+                    titleHidden
+                    choices={options}
+                    selected={contentType.value}
+                    onChange={contentType.onChange}
+                  />
               </Card>
 
             </FormLayout>
