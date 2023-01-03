@@ -121,7 +121,7 @@ app.post("/api/metafieldCreate", async (_req, res) => {
     session: res.locals.shopify.session,
   });
   try {
-    client.query({
+    const response = await client.query({
       data: {
         query: METAFIELD_CREATE_QUERY,
         variables: {
@@ -138,6 +138,7 @@ app.post("/api/metafieldCreate", async (_req, res) => {
         },
       },
     });
+    console.log(JSON.stringify(response));
   } catch (e) {
     console.log(e);
     res.status(500).send(e.message);
