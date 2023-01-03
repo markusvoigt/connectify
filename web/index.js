@@ -139,6 +139,7 @@ app.post("/api/metafieldCreate", async (_req, res) => {
       },
     });
   } catch (e) {
+    console.log(e);
     res.status(500).send(e.message);
   }
   res.status(200).send(`Metafield with key ${_req.body.key} created`);
