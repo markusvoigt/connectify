@@ -60,6 +60,13 @@ mutation metafieldDefinitionUpdate($definition: MetafieldDefinitionUpdateInput!)
   }
 }`;
 
+const APP_INSTALLATION_QUERY = `
+{
+  currentAppInstallation {
+    id
+  }
+}`;
+
 // Set up Shopify authentication and webhook handling
 app.get(shopify.config.auth.path, shopify.auth.begin());
 app.get(
@@ -121,7 +128,7 @@ app.post("/api/metafieldCreate", async (_req, res) => {
     session: res.locals.shopify.session,
   });
   try {
-    const response = await client.query({
+    await client.query({
       data: {
         query: METAFIELD_CREATE_QUERY,
         variables: {
@@ -138,7 +145,6 @@ app.post("/api/metafieldCreate", async (_req, res) => {
         },
       },
     });
-    console.log(JSON.stringify(response));
   } catch (e) {
     console.log(e);
     res.status(500).send(e.message);
@@ -151,7 +157,7 @@ app.post("/api/metafieldUpdate", async (_req, res) => {
     session: res.locals.shopify.session,
   });
   try {
-    client.query({
+    await client.query({
       data: {
         query: METAFIELD_UPDATE_QUERY,
         variables: {
@@ -190,7 +196,7 @@ app.get("/test", async (_req, res) => {
     res.status(200).send("No session found");
   }
   */
-  const metaFieldDefinitions = await getMetafieldDefinitionsForShop();
+  const metaFieldDefinitions = await getAppInstallationIdForShop();
   res.status(200).send(metaFieldDefinitions);
 });
 
@@ -232,6 +238,17 @@ async function getMetafieldDefinitionsForShop(
   return metaFieldDefinitions;
 }
 
+async function getAppInstallationIdForShop(shop = "markusvoigt.myshopify.com") {
+  const session = await getSessionForShop(shop);
+  const client = new shopify.api.clients.Graphql({
+    session,
+  });
+  const response = await client.query({
+    data: APP_INSTALLATION_QUERY,
+  });
+  return response.body.data.currentAppInstallation.id;
+}
+
 app.get("/api/products/create", async (_req, res) => {
   let status = 200;
   let error = null;
@@ -256,38 +273,3 @@ app.use("/*", shopify.ensureInstalledOnShop(), async (_req, res, _next) => {
 });
 
 app.listen(PORT);
-
-function generateType(type) {
-  switch (type) {
-    case "date":
-      return {
-        name: "date",
-        category: "DATE_TIME",
-        supportsDefinitionMigration: true,
-      };
-    case "number_integer":
-      return {
-        name: "number_integer",
-        category: "NUMBER",
-        supportsDefinitionMigration: true,
-      };
-    case "single_line_text_field":
-      return {
-        name: "single_line_text_field",
-        category: "STRING",
-        supportsDefinitionMigration: true,
-      };
-    case "single_line_text_field":
-      return {
-        name: "multi_line_text_field",
-        category: "STRING",
-        supportsDefinitionMigration: true,
-      };
-    case "json":
-      return {
-        name: "json",
-        category: "STRING",
-        supportsDefinitionMigration: true,
-      };
-  }
-}

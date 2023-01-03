@@ -1,5 +1,7 @@
 <span style="color: {{ block.settings.color }}"> Advanced customer settings & preferences </span>
-{% render 'app_snippet' %}
+{% for key in customer.metafields.global %}
+  <p>key</p>
+{% endfor %}
 {% schema %}
 {
   "name": "Customer Metafield",
