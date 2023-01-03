@@ -277,9 +277,9 @@ async function writeMetaFieldsForShop(
   const client = new shopify.api.clients.Graphql({
     session,
   });
-  const appInstallationID = getAppInstallationIdForShop(shop);
+  const appInstallationID = await getAppInstallationIdForShop(shop);
   try {
-    await client.query({
+    const response = await client.query({
       data: {
         query: PRIVATE_METAFIELD_UPDATE_MUTATION,
         variables: {
@@ -295,6 +295,7 @@ async function writeMetaFieldsForShop(
         },
       },
     });
+    console.log(JSON.stringify(response));
   } catch (e) {
     console.log(e);
   }
