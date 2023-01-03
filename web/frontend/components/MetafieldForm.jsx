@@ -52,6 +52,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
     (body) => {
       (async () => {
         const parsedBody = body;
+        if (Array.isArray(parsedBody.contentType)) parsedBody.contentType = parsedBody.contentType[0];
 
         const url = Metafield ? "/api/metafieldUpdate" : "/api/metafieldCreate"
 
