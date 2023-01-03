@@ -1,7 +1,5 @@
-<span style="color: {{ block.settings.color }}"> Advanced customer settings & preferences </span>
-{% for key in customer.metafields.global %}
-  <p>key</p>
-{% endfor %}
+<span style="color: {{ block.settings.color }}"> Advanced customer settings & preferences </span> Value:
+{{ app.metafields.connectify.metafields }}
 {% schema %}
 {
   "name": "Customer Metafield",

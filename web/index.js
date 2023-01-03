@@ -131,11 +131,15 @@ app.get("/api/metafields", async (_req, res) => {
   const response = await client.query({
     data: METAFIELDS_QUERY,
   });
+
   const metaFieldDefinitions = [];
   for (let definition of response.body.data.metafieldDefinitions.edges) {
     metaFieldDefinitions.push(definition.node);
   }
-  await writeMetaFieldsForShop();
+  await writeMetaFieldsForShop(
+    res.locals.shopify.shopDomain,
+    metaFieldDefinitions
+  );
   res.status(200).send(metaFieldDefinitions);
 });
 
@@ -265,13 +269,15 @@ async function getAppInstallationIdForShop(shop = "markusvoigt.myshopify.com") {
   return response.body.data.currentAppInstallation.id;
 }
 
-async function writeMetaFieldsForShop(shop = "markusvoigt.myshopify.com") {
+async function writeMetaFieldsForShop(
+  shop = "markusvoigt.myshopify.com",
+  metaFieldDefinitions
+) {
   const session = await getSessionForShop(shop);
   const client = new shopify.api.clients.Graphql({
     session,
   });
   const appInstallationID = getAppInstallationIdForShop(shop);
-  const metaFieldDefinitions = await getMetafieldDefinitionsForShop(shop);
   try {
     await client.query({
       data: {
