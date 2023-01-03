@@ -132,7 +132,7 @@ app.post("/api/metafieldCreate", async (_req, res) => {
             namespace: _req.body.namespace,
             ownerType: "CUSTOMER",
             pin: false,
-            type: _req.body.contentType,
+            type: generateType(_req.body.contentType),
             visibleToStorefrontApi: true,
           },
         },
@@ -161,7 +161,7 @@ app.post("/api/metafieldUpdate", async (_req, res) => {
             namespace: _req.body.namespace,
             ownerType: "CUSTOMER",
             pin: false,
-            type: _req.body.contentType,
+            type: generateType(_req.body.contentType),
             visibleToStorefrontApi: true,
           },
         },
@@ -255,3 +255,38 @@ app.use("/*", shopify.ensureInstalledOnShop(), async (_req, res, _next) => {
 });
 
 app.listen(PORT);
+
+function generateType(type) {
+  switch (type) {
+    case "date":
+      return {
+        name: "date",
+        category: "DATE_TIME",
+        supportsDefinitionMigration: true,
+      };
+    case "number_integer":
+      return {
+        name: "number_integer",
+        category: "NUMBER",
+        supportsDefinitionMigration: true,
+      };
+    case "single_line_text_field":
+      return {
+        name: "single_line_text_field",
+        category: "STRING",
+        supportsDefinitionMigration: true,
+      };
+    case "single_line_text_field":
+      return {
+        name: "multi_line_text_field",
+        category: "STRING",
+        supportsDefinitionMigration: true,
+      };
+    case "json":
+      return {
+        name: "json",
+        category: "STRING",
+        supportsDefinitionMigration: true,
+      };
+  }
+}
