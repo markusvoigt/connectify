@@ -72,7 +72,6 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
       return { status: "success" };
     },[Metafield]);
 
-    const handleChange = useCallback((value) => setSelected(value), []);
   /*
     Sets up the form state with the useForm hook.
 
@@ -180,7 +179,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
                     titleHidden
                     choices={options}
                     selected={contentType.value}
-                    onChange={handleChange}
+                    onChange={contentType.onChange}
                   />
               </Card>
 
