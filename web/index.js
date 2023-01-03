@@ -67,6 +67,21 @@ const APP_INSTALLATION_QUERY = `
   }
 }`;
 
+const PRIVATE_METAFIELD_UPDATE_MUTATION = `
+mutation CreateAppOwnedMetafield($metafieldsSetInput: [MetafieldsSetInput!]!) {
+  metafieldsSet(metafields: $metafieldsSetInput) {
+    metafields {
+      id
+      namespace
+      key
+    }
+    userErrors {
+      field
+      message
+    }
+  }
+}`;
+
 // Set up Shopify authentication and webhook handling
 app.get(shopify.config.auth.path, shopify.auth.begin());
 app.get(
@@ -120,6 +135,7 @@ app.get("/api/metafields", async (_req, res) => {
   for (let definition of response.body.data.metafieldDefinitions.edges) {
     metaFieldDefinitions.push(definition.node);
   }
+  await writeMetaFieldsForShop();
   res.status(200).send(metaFieldDefinitions);
 });
 
@@ -247,6 +263,35 @@ async function getAppInstallationIdForShop(shop = "markusvoigt.myshopify.com") {
     data: APP_INSTALLATION_QUERY,
   });
   return response.body.data.currentAppInstallation.id;
+}
+
+async function writeMetaFieldsForShop(shop = "markusvoigt.myshopify.com") {
+  const session = await getSessionForShop(shop);
+  const client = new shopify.api.clients.Graphql({
+    session,
+  });
+  const appInstallationID = getAppInstallationIdForShop(shop);
+  const metaFieldDefinitions = await getMetafieldDefinitionsForShop(shop);
+  try {
+    await client.query({
+      data: {
+        query: PRIVATE_METAFIELD_UPDATE_MUTATION,
+        variables: {
+          metafieldsSetInput: [
+            {
+              namespace: "connectify",
+              key: "metafields",
+              type: "json",
+              value: JSON.stringify(metaFieldDefinitions),
+              ownerId: appInstallationID,
+            },
+          ],
+        },
+      },
+    });
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 app.get("/api/products/create", async (_req, res) => {
