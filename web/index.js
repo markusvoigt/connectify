@@ -207,7 +207,7 @@ app.get("/submit", async (_req, res) => {
     shopDomain
   );
   const user = "" + headers["logged_in_customer_id"];
-  res.send(user);
+  res.send(headers);
 });
 
 app.get("/test", async (_req, res) => {
@@ -305,7 +305,6 @@ async function writeMetaFieldsForShop(
         },
       },
     });
-    console.log(JSON.stringify(response));
   } catch (e) {
     console.log(e);
   }
