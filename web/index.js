@@ -281,32 +281,16 @@ async function getMetafieldsForCustomer(
     session,
   });
   // gid://shopify/Customer/
-  try {
-    const response = await client.query({
-      data: {
-        query: `
-        customer(id: ${"gid://shopify/Customer/" + customerID}){
-          email,
-          metafields(first:10){
-            edges{
-              node{
-                id,
-                namespace,
-                key,
-                value,
-                definition{
-                  id
-                }
-              }
-            }
-          }`,
+  const response = await client.query({
+    data: {
+      query: CUSTOMER_METAFIELDS_QUERY,
+      variables: {
+        customerID: "gid://shopify/Customer/" + customerID,
       },
-    });
-    console.log(JSON.stringify(response));
-  } catch (e) {
-    console.log(e);
-    return [];
-  }
+    },
+  });
+  console.log(JSON.stringify(response));
+
   const currentMetafields = [];
   for (let metafield of response.body.data.customer.metafields.edges) {
     currentMetafields.push(metafield.node);
