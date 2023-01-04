@@ -291,9 +291,10 @@ async function getMetafieldsForCustomer(
       },
     },
   });
-  console.log(response.body.data);
+
   const currentMetafields = [];
   for (let metafield of response.body.data.customer.metafields.edges) {
+    console.log(metafield);
     currentMetafields.push(metafield.node);
   }
   return currentMetafields;
