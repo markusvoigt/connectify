@@ -207,7 +207,7 @@ app.get("/submit", async (_req, res) => {
     shopDomain
   );
   const user = "" + headers["logged_in_customer_id"];
-  res.send(_req.params);
+  res.send(JSON.stringify(_req));
 });
 
 app.get("/test", async (_req, res) => {
