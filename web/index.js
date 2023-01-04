@@ -111,7 +111,8 @@ const CUSTOMER_METAFIELDS_QUERY = `query($customerID:ID!){
         }
       }
     }
-  }`;
+  }
+}`;
 
 // Set up Shopify authentication and webhook handling
 app.get(shopify.config.auth.path, shopify.auth.begin());
@@ -281,16 +282,20 @@ async function getMetafieldsForCustomer(
     session,
   });
   // gid://shopify/Customer/
-  const response = await client.query({
-    data: {
-      query: CUSTOMER_METAFIELDS_QUERY,
-      variables: {
-        customerID: "gid://shopify/Customer/" + customerID,
+  try {
+    const response = await client.query({
+      data: {
+        query: CUSTOMER_METAFIELDS_QUERY,
+        variables: {
+          customerID: "gid://shopify/Customer/" + customerID,
+        },
       },
-    },
-  });
-  console.log(JSON.stringify(response));
-
+    });
+    console.log(JSON.stringify(response));
+  } catch (e) {
+    console.log(e);
+    return [];
+  }
   const currentMetafields = [];
   for (let metafield of response.body.data.customer.metafields.edges) {
     currentMetafields.push(metafield.node);
