@@ -200,6 +200,16 @@ app.post("/api/metafieldUpdate", async (_req, res) => {
   res.status(200).send(`Metafield with key ${_req.body.key} updated`);
 });
 
+app.get("/submit", async (_req, res) => {
+  const headers = _req.headers;
+  const shopDomain = "" + headers["x-shop-domain"];
+  const sessions = await shopify.config.sessionStorage.findSessionsByShop(
+    shopDomain
+  );
+  const user = "" + headers["logged_in_customer_id"];
+  res.send(user);
+});
+
 app.get("/test", async (_req, res) => {
   const headers = _req.headers;
   const shopDomain = "" + headers["x-shop-domain"];

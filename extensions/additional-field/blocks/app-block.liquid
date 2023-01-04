@@ -1,12 +1,99 @@
-<span style="color: {{ block.settings.color }}"> Advanced customer settings & preferences </span> Value:
-{{ app.metafields.connectify.metafields }}
+{{ 'style.css' | asset_url | stylesheet_tag }}
+{%- if block.settings.heading -%}
+  <h2 style="color: {{ block.settings.color }}">{{ block.settings.heading }}</h2>
+{%- endif -%}
+{%- assign metafields = app.metafields.connectify.metafields.value -%}
+<div
+  class="mf-block"
+  style="padding: {{ block.settings.padding_y }}px {{ block.settings.padding_x }}px; margin: {{ block.settings.margin_y }}px {{ block.settings.margin_x }}px;"
+>
+  <form id="mfForm">
+    {%- for metafield in metafields -%}
+      {%- assign key = metafield.key -%}
+      {% if metafield.type.name == 'number_integer' %}
+        {%- assign type = 'number' -%}
+      {% elsif metafield.type.name == 'date' %}
+        {%- assign type = 'date' -%}
+      {% else %}
+        {%- assign type = 'text' -%}
+      {% endif %}
+      <label for="{{ key }}">{{ metafield.name }}</label>
+      <input
+        type="{{ type }}"
+        data-type="{{ metafield.type.name }}"
+        id="{{ key }}"
+        value="{{ customer.metafields.custom[key] }}"
+      >
+      <br>
+    {%- endfor -%}
+    <input
+      type="button"
+      onclick="update()"
+      id="submit"
+      value="{{ block.settings.buttonLabel }}"
+      style="
+        color:
+        {{- block.settings.button_color -}}
+        ;background-color:{{ block.settings.button_background }};border-radius:
+        {{ block.settings.button_border_radius }}px;
+      "
+    >
+  </form>
+</div>
+<script src="{{ 'connectify.js' | asset_url }}" defer></script>
 {% schema %}
 {
-  "name": "Customer Metafield",
+  "name": "Customer Metafields",
   "target": "section",
-  "stylesheet": "app.css",
-  "javascript": "app.js",
+  "stylesheet": "style.css",
+  "javascript": "connectify.js",
   "templates": ["customers/account"],
-  "settings": [{ "label": "Color", "id": "color", "type": "color", "default": "#000000" }]
+  "settings": [
+    { "label": "Color", "id": "color", "type": "color", "default": "#000000" },
+    { "label": "Heading", "id": "heading", "type": "text", "default": "Advanced customer settings & preferences" },
+    { "label": "Button label", "id": "buttonLabel", "type": "text", "default": "Safe settings" },
+    {
+      "type": "number",
+      "id": "padding_x",
+      "label": "Horizontal padding",
+      "default": 5
+    },
+    {
+      "type": "number",
+      "id": "padding_y",
+      "label": "Vertical padding",
+      "default": 5
+    },
+    {
+      "type": "number",
+      "id": "margin_x",
+      "label": "Horizontal margin",
+      "default": 5
+    },
+    {
+      "type": "number",
+      "id": "margin_y",
+      "label": "Vertical margin",
+      "default": 10
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Button text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_background_color",
+      "label": "Button background color",
+      "default": "#333333"
+    },
+    {
+      "type": "number",
+      "id": "button_border_radius",
+      "label": "Button border radius",
+      "default": 3
+    }
+  ]
 }
 {% endschema %}
