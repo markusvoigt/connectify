@@ -82,6 +82,37 @@ mutation CreateAppOwnedMetafield($metafieldsSetInput: [MetafieldsSetInput!]!) {
   }
 }`;
 
+const CUSTOMER_UPDATE_MUTATION = `
+mutation customerUpdate($input: CustomerInput!) {
+  customerUpdate(input: $input) {
+    customer {
+      id
+    }
+    userErrors {
+      field
+      message
+    }
+  }
+}`;
+
+const CUSTOMER_METAFIELDS_QUERY = `query($customerID:ID!){
+  customer(id: $customerID){
+    email,
+    metafields(first:10){
+      edges{
+        node{
+          id,
+          namespace,
+          key,
+          value,
+          definition{
+            id
+          }
+        }
+      }
+    }
+  }`;
+
 // Set up Shopify authentication and webhook handling
 app.get(shopify.config.auth.path, shopify.auth.begin());
 app.get(
@@ -201,13 +232,22 @@ app.post("/api/metafieldUpdate", async (_req, res) => {
 });
 
 app.get("/submit", async (_req, res) => {
+  // Auth by Shopify App Proxy
+  const user = _req.query.logged_in_customer_id;
+  if (!user) {
+    res.status(401).send("Not authtenticated");
+  }
   const headers = _req.headers;
   const shopDomain = "" + headers["x-shop-domain"];
   const sessions = await shopify.config.sessionStorage.findSessionsByShop(
     shopDomain
   );
-  const user = "" + headers["logged_in_customer_id"];
-  res.send(_req.query);
+  const currentMetafields = getMetafieldsForCustomer(user, shopDomain);
+  res.send(JSON.stringify(currentMetafields));
+  // get current metafields
+  // update for updates
+  // create new ones for new values
+  // send response
 });
 
 app.get("/test", async (_req, res) => {
@@ -216,18 +256,12 @@ app.get("/test", async (_req, res) => {
   const sessions = await shopify.config.sessionStorage.findSessionsByShop(
     shopDomain
   );
-  /*
-  if (sessions.length > 0) {
-    const countData = await shopify.api.rest.Product.count({
-      session: sessions[0],
-    });
-    res.status(200).send(countData);
-  } else {
-    res.status(200).send("No session found");
-  }
-  */
-  const metaFieldDefinitions = await getAppInstallationIdForShop();
-  res.status(200).send(metaFieldDefinitions);
+  const user = _req.query.logged_in_customer_id
+    ? _req.query.logged_in_customer_id
+    : "unknown";
+  res
+    .status(200)
+    .send(`You are calling me from ${shopDomain} and you are ${user}`);
 });
 
 async function getSessionForShop(shop = "markusvoigt.myshopify.com") {
@@ -235,6 +269,35 @@ async function getSessionForShop(shop = "markusvoigt.myshopify.com") {
   if (sessions.length > 0) {
     return sessions[0];
   }
+}
+
+async function getMetafieldsForCustomer(
+  customerID,
+  shop = "markusvoigt.myshopify.com"
+) {
+  const session = await getSessionForShop(shop);
+
+  const client = new shopify.api.clients.Graphql({
+    session,
+  });
+  try {
+    const response = await client.query({
+      data: {
+        query: CUSTOMER_METAFIELDS_QUERY,
+        variables: {
+          customerID: "gid://shopify/Customer/" + customerID,
+        },
+      },
+    });
+  } catch (e) {
+    console.log(e);
+    return [];
+  }
+  const currentMetafields = [];
+  for (let metafield of response.body.data.customer.metafields.edges) {
+    currentMetafields.push(metafield.node);
+  }
+  return currentMetafields;
 }
 
 async function getMetafieldDefinitionsForShop(
