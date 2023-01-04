@@ -289,7 +289,7 @@ async function getMetafieldsForCustomer(
         },
       },
     });
-    console.log(response);
+    console.log(JSON.stringify(response));
   } catch (e) {
     console.log(e);
     return [];
