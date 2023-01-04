@@ -280,13 +280,26 @@ async function getMetafieldsForCustomer(
   const client = new shopify.api.clients.Graphql({
     session,
   });
+  // gid://shopify/Customer/
   try {
     const response = await client.query({
       data: {
-        query: CUSTOMER_METAFIELDS_QUERY,
-        variables: {
-          customerID: "gid://shopify/Customer/" + customerID,
-        },
+        query: `
+        customer(id: ${"gid://shopify/Customer/" + customerID}){
+          email,
+          metafields(first:10){
+            edges{
+              node{
+                id,
+                namespace,
+                key,
+                value,
+                definition{
+                  id
+                }
+              }
+            }
+          }`,
       },
     });
     console.log(JSON.stringify(response));
