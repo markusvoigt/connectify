@@ -253,7 +253,7 @@ app.post("/api/metafieldUpdate", async (_req, res) => {
   res.status(200).send(`Metafield with key ${_req.body.key} updated`);
 });
 
-app.get("/submit", async (_req, res) => {
+app.post("/submit", async (_req, res) => {
   // Auth by Shopify App Proxy
   const user = _req.query.logged_in_customer_id;
   if (!user) {
