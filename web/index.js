@@ -82,19 +82,6 @@ mutation CreateAppOwnedMetafield($metafieldsSetInput: [MetafieldsSetInput!]!) {
   }
 }`;
 
-const CUSTOMER_UPDATE_MUTATION = `
-mutation customerUpdate($input: CustomerInput!) {
-  customerUpdate(input: $input) {
-    customer {
-      id
-    }
-    userErrors {
-      field
-      message
-    }
-  }
-}`;
-
 const CUSTOMER_METAFIELDS_QUERY = `query($customerID:ID!){
   customer(id: $customerID){
     email,
@@ -128,6 +115,16 @@ const CUSTOMER_METAFIELDS_UPSERT_MUTATION = `mutation customerUpdate($input: Cus
       }
     }
     }
+    userErrors {
+      field
+      message
+    }
+  }
+}`;
+
+const METAFIELD_DELETE_MUTATION = `mutation metafieldDelete($input: MetafieldDeleteInput!) {
+  metafieldDelete(input: $input) {
+    deletedId
     userErrors {
       field
       message
@@ -266,14 +263,17 @@ app.post("/submit", async (_req, res) => {
 
   const currentMetafields = await getMetafieldsForCustomer(user, session);
   for (let metafield of currentMetafields) {
-    await upsertMetafield(
-      session,
-      user,
-      metafield.key,
-      updates.find((m) => m.key == metafield.key).value,
-      metafield.type,
-      metafield.id
-    );
+    const value = updates.find((m) => m.key == metafield.key).value || "";
+    if (value == "") deleteMetafield(session, metafield.id);
+    else
+      await upsertMetafield(
+        session,
+        user,
+        metafield.key,
+        updates.find((m) => m.key == metafield.key).value,
+        metafield.type,
+        metafield.id
+      );
   }
   for (let update of updates) {
     // if not already in metafields
@@ -291,6 +291,22 @@ app.post("/submit", async (_req, res) => {
   }
   res.status(200).send("Metafields updated");
 });
+
+async function deleteMetafield(session, id) {
+  const client = new shopify.api.clients.Graphql({
+    session,
+  });
+  const response = await client.query({
+    data: {
+      query: METAFIELD_DELETE_MUTATION,
+      variables: {
+        input: {
+          id,
+        },
+      },
+    },
+  });
+}
 
 async function upsertMetafield(
   session,
