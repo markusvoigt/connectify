@@ -114,6 +114,27 @@ const CUSTOMER_METAFIELDS_QUERY = `query($customerID:ID!){
   }
 }`;
 
+const CUSTOMER_METAFIELDS_UPSERT_MUTATION = `mutation customerUpdate($input: CustomerInput!) {
+  customerUpdate(input: $input) {
+    customer {
+     id,
+     metafields(first:1){
+      edges{
+        node{
+          id,
+          key,
+          value
+        }
+      }
+    }
+    }
+    userErrors {
+      field
+      message
+    }
+  }
+}`;
+
 // Set up Shopify authentication and webhook handling
 app.get(shopify.config.auth.path, shopify.auth.begin());
 app.get(
@@ -243,13 +264,67 @@ app.get("/submit", async (_req, res) => {
   const sessions = await shopify.config.sessionStorage.findSessionsByShop(
     shopDomain
   );
-  const currentMetafields = getMetafieldsForCustomer(user, shopDomain);
-  res.send(JSON.stringify(currentMetafields));
-  // get current metafields
-  // update for updates
-  // create new ones for new values
-  // send response
+  const updates = _req.body.updates;
+
+  const currentMetafields = await getMetafieldsForCustomer(user, sessions[0]);
+  for (let metafield of currentMetafields) {
+    await upsertMetafield(
+      sessions[0],
+      user,
+      metafield.key,
+      updates.find((m) => m.key == metafield.key).value,
+      metafield.type,
+      metafield.id
+    );
+  }
+  for (let update of updates) {
+    // if not already in metafields
+    // upsert without ID aka insert
+    if (!currentMetafields.find((m) => m.key == update.key)) {
+      await upsertMetafield(
+        sessions[0],
+        user,
+        update.key,
+        update.value,
+        update.type,
+        null
+      );
+    }
+  }
+  res.status(200).send("Metafields updated");
 });
+
+async function upsertMetafield(
+  session,
+  customerID,
+  key,
+  value,
+  type,
+  metafieldID
+) {
+  const client = new shopify.api.clients.Graphql({
+    session,
+  });
+  const response = await client.query({
+    data: {
+      query: CUSTOMER_METAFIELDS_UPSERT_MUTATION,
+      variables: {
+        input: {
+          id: "gid://shopify/Customer/" + customerID,
+          metafields: [
+            {
+              id: metafieldID,
+              key,
+              namespace: "custom",
+              type,
+              value,
+            },
+          ],
+        },
+      },
+    },
+  });
+}
 
 app.get("/test", async (_req, res) => {
   const headers = _req.headers;
@@ -272,16 +347,10 @@ async function getSessionForShop(shop = "markusvoigt.myshopify.com") {
   }
 }
 
-async function getMetafieldsForCustomer(
-  customerID,
-  shop = "markusvoigt.myshopify.com"
-) {
-  const session = await getSessionForShop(shop);
-
+async function getMetafieldsForCustomer(customerID, session) {
   const client = new shopify.api.clients.Graphql({
     session,
   });
-  // gid://shopify/Customer/
 
   const response = await client.query({
     data: {
@@ -294,7 +363,6 @@ async function getMetafieldsForCustomer(
 
   const currentMetafields = [];
   for (let metafield of response.body.data.customer.metafields.edges) {
-    console.log(metafield);
     currentMetafields.push(metafield.node);
   }
   return currentMetafields;
