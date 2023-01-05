@@ -63,7 +63,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
         });
         console.log(`Response: ${response}`);
          makeClean();
-        navigate(`/metafields/${body.key}`);
+        navigate(`/`);
 
          //setMetafield(JSON.parse(parsedBody));
 

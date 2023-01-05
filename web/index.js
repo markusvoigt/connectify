@@ -16,121 +16,121 @@ const STATIC_PATH =
     ? `${process.cwd()}/frontend/dist`
     : `${process.cwd()}/frontend/`;
 
-const app = express();
-
 const METAFIELDS_QUERY = `query{
-  metafieldDefinitions(ownerType:CUSTOMER,first:10){
-    edges{
-      node{
-        name,
-        key,
-        description,
-        namespace,
-        type{
-          name
-        }
-      }
-    }
-  }
-}`;
-
-const METAFIELD_CREATE_QUERY = `
-mutation metafieldDefinitionCreate($definition: MetafieldDefinitionInput!) {
-  metafieldDefinitionCreate(definition: $definition) {
-    createdDefinition {
-      key
-    }
-    userErrors {
-      field
-      message
-    }
-  }
-}`;
-
-const METAFIELD_UPDATE_QUERY = `
-mutation metafieldDefinitionUpdate($definition: MetafieldDefinitionUpdateInput!) {
-  metafieldDefinitionUpdate(definition: $definition) {
-    updatedDefinition {
-      key
-    }
-    userErrors {
-      field
-      message
-    }
-  }
-}`;
-
-const APP_INSTALLATION_QUERY = `
-{
-  currentAppInstallation {
-    id
-  }
-}`;
-
-const PRIVATE_METAFIELD_UPDATE_MUTATION = `
-mutation CreateAppOwnedMetafield($metafieldsSetInput: [MetafieldsSetInput!]!) {
-  metafieldsSet(metafields: $metafieldsSetInput) {
-    metafields {
-      id
-      namespace
-      key
-    }
-    userErrors {
-      field
-      message
-    }
-  }
-}`;
-
-const CUSTOMER_METAFIELDS_QUERY = `query($customerID:ID!){
-  customer(id: $customerID){
-    email,
-    metafields(first:10){
-      edges{
-        node{
-          id,
-          namespace,
-          key,
-          value,
-          definition{
-            id
+      metafieldDefinitions(ownerType:CUSTOMER,first:10){
+        edges{
+          node{
+            name,
+            key,
+            description,
+            namespace,
+            type{
+              name
+            }
           }
         }
       }
-    }
-  }
-}`;
+    }`;
 
-const CUSTOMER_METAFIELDS_UPSERT_MUTATION = `mutation customerUpdate($input: CustomerInput!) {
-  customerUpdate(input: $input) {
-    customer {
-     id,
-     metafields(first:1){
-      edges{
-        node{
-          id,
-          key,
-          value
+const METAFIELD_CREATE_QUERY = `
+    mutation metafieldDefinitionCreate($definition: MetafieldDefinitionInput!) {
+      metafieldDefinitionCreate(definition: $definition) {
+        createdDefinition {
+          key
+        }
+        userErrors {
+          field
+          message
         }
       }
-    }
-    }
-    userErrors {
-      field
-      message
-    }
-  }
-}`;
+    }`;
+
+const METAFIELD_UPDATE_QUERY = `
+    mutation metafieldDefinitionUpdate($definition: MetafieldDefinitionUpdateInput!) {
+      metafieldDefinitionUpdate(definition: $definition) {
+        updatedDefinition {
+          key
+        }
+        userErrors {
+          field
+          message
+        }
+      }
+    }`;
+
+const APP_INSTALLATION_QUERY = `
+    {
+      currentAppInstallation {
+        id
+      }
+    }`;
+
+const PRIVATE_METAFIELD_UPDATE_MUTATION = `
+    mutation CreateAppOwnedMetafield($metafieldsSetInput: [MetafieldsSetInput!]!) {
+      metafieldsSet(metafields: $metafieldsSetInput) {
+        metafields {
+          id
+          namespace
+          key
+        }
+        userErrors {
+          field
+          message
+        }
+      }
+    }`;
+
+const CUSTOMER_METAFIELDS_QUERY = `query($customerID:ID!){
+      customer(id: $customerID){
+        email,
+        metafields(first:10){
+          edges{
+            node{
+              id,
+              namespace,
+              key,
+              value,
+              definition{
+                id
+              }
+            }
+          }
+        }
+      }
+    }`;
+
+const CUSTOMER_METAFIELDS_UPSERT_MUTATION = `mutation customerUpdate($input: CustomerInput!) {
+      customerUpdate(input: $input) {
+        customer {
+         id,
+         metafields(first:1){
+          edges{
+            node{
+              id,
+              key,
+              value
+            }
+          }
+        }
+        }
+        userErrors {
+          field
+          message
+        }
+      }
+    }`;
 
 const METAFIELD_DELETE_MUTATION = `mutation metafieldDelete($input: MetafieldDeleteInput!) {
-  metafieldDelete(input: $input) {
-    deletedId
-    userErrors {
-      field
-      message
-    }
-  }
-}`;
+      metafieldDelete(input: $input) {
+        deletedId
+        userErrors {
+          field
+          message
+        }
+      }
+    }`;
+
+const app = express();
 
 // Set up Shopify authentication and webhook handling
 app.get(shopify.config.auth.path, shopify.auth.begin());
