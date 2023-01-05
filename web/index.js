@@ -261,15 +261,13 @@ app.get("/submit", async (_req, res) => {
   }
   const headers = _req.headers;
   const shopDomain = "" + headers["x-shop-domain"];
-  const sessions = await shopify.config.sessionStorage.findSessionsByShop(
-    shopDomain
-  );
+  const session = await getSessionForShop(shopDomain);
   const updates = _req.body.updates;
 
-  const currentMetafields = await getMetafieldsForCustomer(user, sessions[0]);
+  const currentMetafields = await getMetafieldsForCustomer(user, session);
   for (let metafield of currentMetafields) {
     await upsertMetafield(
-      sessions[0],
+      session,
       user,
       metafield.key,
       updates.find((m) => m.key == metafield.key).value,
@@ -282,7 +280,7 @@ app.get("/submit", async (_req, res) => {
     // upsert without ID aka insert
     if (!currentMetafields.find((m) => m.key == update.key)) {
       await upsertMetafield(
-        sessions[0],
+        session,
         user,
         update.key,
         update.value,
