@@ -31,8 +31,7 @@ const shopify = shopifyApp({
   },
   webhooks: {
     path: "/api/webhooks",
-  },
-  host: new URLSearchParams(location.search).get("host"),
+  }
   // This should be replaced with your preferred storage strategy
   sessionStorage: new SQLiteSessionStorage(DB_PATH),
 });
