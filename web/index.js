@@ -130,7 +130,7 @@ const METAFIELD_DELETE_MUTATION = `mutation metafieldDelete($input: MetafieldDel
     }`;
 
 const METAFIELD_DEFINITION_DELETE_MUTATION = `
-mutation metafieldDefinitionDelete($id: ID!,deleteAllAssociatedMetafields: true) {
+mutation metafieldDefinitionDelete($id: ID!, deleteAllAssociatedMetafields: true) {
   metafieldDefinitionDelete(id: $id) {
     deletedDefinitionId
     userErrors {
@@ -288,6 +288,7 @@ app.post("/api/metafieldDelete", async (_req, res) => {
       },
     });
   } catch (e) {
+    console.log(JSON.stringify(e));
     res.status(500).send(e.message);
     return;
   }
