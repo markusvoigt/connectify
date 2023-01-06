@@ -282,10 +282,12 @@ app.post("/api/metafieldDelete", async (_req, res) => {
         query: METAFIELD_DEFINITION_DELETE_MUTATION,
         variables: {
           id: _req.body.id,
+          deleteAllAssociatedMetafields: true,
         },
       },
     });
   } catch (e) {
+    console.log(e);
     res.status(500).send(e.message);
   }
   res.status(200).send(`Metafield with key ${_req.body.key} deleted`);
@@ -397,7 +399,9 @@ async function getSessionForShop(shop = "markusvoigt.myshopify.com") {
   if (sessions.length > 0) {
     return sessions[0];
   } else {
-    console.log("No valid session");
+    shopify.config.auth.callbackPath,
+      shopify.auth.callback(),
+      shopify.redirectToShopifyOrAppRoot();
   }
 }
 
@@ -494,20 +498,6 @@ async function writeMetaFieldsForShop(
     console.log(e);
   }
 }
-
-app.get("/api/products/create", async (_req, res) => {
-  let status = 200;
-  let error = null;
-
-  try {
-    await productCreator(res.locals.shopify.session);
-  } catch (e) {
-    console.log(`Failed to process products/create: ${e.message}`);
-    status = 500;
-    error = e.message;
-  }
-  res.status(status).send({ success: status === 200, error });
-});
 
 app.use(serveStatic(STATIC_PATH, { index: false }));
 

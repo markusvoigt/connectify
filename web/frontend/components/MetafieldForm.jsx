@@ -61,8 +61,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
           body: JSON.stringify(parsedBody),
           headers: { "Content-Type": "application/json" },
         });
-        console.log(`Response: ${response}`);
-         makeClean();
+        makeClean();
         navigate(`/`);
       })();
       return { status: "success" };
@@ -76,7 +75,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
           headers: { "Content-Type": "application/json" },
         });
         navigate(`/`);
-      })();
+      })(Metafield);
     }
 
   /*
