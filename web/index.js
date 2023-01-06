@@ -141,7 +141,7 @@ mutation metafieldDefinitionDelete($id: ID!) {
 }`;
 
 const app = express();
-/*
+
 app.use((req, res, next) => {
   const shop = req.query.shop;
   if (shop) {
@@ -152,7 +152,6 @@ app.use((req, res, next) => {
   }
   next();
 });
-*/
 
 // Set up Shopify authentication and webhook handling
 app.get(shopify.config.auth.path, shopify.auth.begin());
@@ -398,11 +397,7 @@ async function getSessionForShop(shop = "markusvoigt.myshopify.com") {
   if (sessions.length > 0) {
     return sessions[0];
   } else {
-    app.get(
-      shopify.config.auth.callbackPath,
-      shopify.auth.callback(),
-      shopify.redirectToShopifyOrAppRoot()
-    );
+    console.log("No valid session");
   }
 }
 
