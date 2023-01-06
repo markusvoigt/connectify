@@ -287,8 +287,9 @@ app.post("/api/metafieldDelete", async (_req, res) => {
       },
     });
   } catch (e) {
-    console.log(e);
+    console.log(JSON.stringify(e));
     res.status(500).send(e.message);
+    return;
   }
   res.status(200).send(`Metafield with key ${_req.body.key} deleted`);
 });
