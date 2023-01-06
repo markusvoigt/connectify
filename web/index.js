@@ -358,6 +358,12 @@ async function getSessionForShop(shop = "markusvoigt.myshopify.com") {
   const sessions = await shopify.config.sessionStorage.findSessionsByShop(shop);
   if (sessions.length > 0) {
     return sessions[0];
+  } else {
+    app.get(
+      shopify.config.auth.callbackPath,
+      shopify.auth.callback(),
+      shopify.redirectToShopifyOrAppRoot()
+    );
   }
 }
 
