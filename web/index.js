@@ -130,8 +130,8 @@ const METAFIELD_DELETE_MUTATION = `mutation metafieldDelete($input: MetafieldDel
     }`;
 
 const METAFIELD_DEFINITION_DELETE_MUTATION = `
-mutation metafieldDefinitionDelete($id: ID!, deleteAllAssociatedMetafields: true) {
-  metafieldDefinitionDelete(id: $id) {
+mutation metafieldDefinitionDelete($id: ID!) {
+  metafieldDefinitionDelete(id: $id, deleteAllAssociatedMetafields: true) {
     deletedDefinitionId
     userErrors {
       field
