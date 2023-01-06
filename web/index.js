@@ -129,6 +129,17 @@ const METAFIELD_DELETE_MUTATION = `mutation metafieldDelete($input: MetafieldDel
       }
     }`;
 
+const METAFIELD_DEFINITION_DELETE_MUTATION = `
+mutation metafieldDefinitionDelete($id: ID!) {
+  metafieldDefinitionDelete(id: $id) {
+    deletedDefinitionId
+    userErrors {
+      field
+      message
+    }
+  }
+}`;
+
 const app = express();
 
 app.use((req, res, next) => {
@@ -258,6 +269,26 @@ app.post("/api/metafieldUpdate", async (_req, res) => {
     res.status(500).send(e.message);
   }
   res.status(200).send(`Metafield with key ${_req.body.key} updated`);
+});
+
+app.post("/api/metafieldDelete", async (_req, res) => {
+  const client = new shopify.api.clients.Graphql({
+    session: res.locals.shopify.session,
+  });
+
+  try {
+    await client.query({
+      data: {
+        query: METAFIELD_DEFINITION_DELETE_MUTATION,
+        variables: {
+          id: _req.body.id,
+        },
+      },
+    });
+  } catch (e) {
+    res.status(500).send(e.message);
+  }
+  res.status(200).send(`Metafield with key ${_req.body.key} deleted`);
 });
 
 app.post("/submit", async (_req, res) => {

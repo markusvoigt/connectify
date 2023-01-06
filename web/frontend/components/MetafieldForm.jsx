@@ -64,14 +64,21 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
         console.log(`Response: ${response}`);
          makeClean();
         navigate(`/`);
-
-         //setMetafield(JSON.parse(parsedBody));
-
-        console.log(`Metafield: ${JSON.stringify(Metafield)}`);
-        console.log(`parsedBody: ${JSON.stringify(parsedBody)}`);
       })();
       return { status: "success" };
     },[Metafield]);
+
+    const deleteMetafield = () => {
+      (async () => {
+        const response = await fetch("/api/metafieldDelete", {
+          method:"POST",
+          body: JSON.stringify({id: Metafield.id}),
+          headers: { "Content-Type": "application/json" },
+        });
+        console.log(`Response: ${response}`);
+        navigate(`/`);
+      })();
+    }
 
   /*
     Sets up the form state with the useForm hook.
@@ -183,10 +190,20 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
                     onChange={contentType.onChange}
                   />
               </Card>
-
             </FormLayout>
           </Form>
         </Layout.Section>
+        <Layout.Section>
+          {Metafield?.key && (
+            <Button
+              outline
+              destructive
+              onClick={deleteMetafield}
+            >
+              Delete metafield
+            </Button>
+          )}
+          </Layout.Section>
       </Layout>
   );
 }
