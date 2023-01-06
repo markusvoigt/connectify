@@ -7,7 +7,6 @@ import shopify from "./shopify.js";
 import productCreator from "./product-creator.js";
 import GDPRWebhookHandlers from "./gdpr.js";
 import "@shopify/shopify-api/adapters/node";
-import { Session } from "@shopify/shopify-api";
 
 const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
 
@@ -131,6 +130,17 @@ const METAFIELD_DELETE_MUTATION = `mutation metafieldDelete($input: MetafieldDel
     }`;
 
 const app = express();
+
+app.use((req, res, next) => {
+  const shop = req.query.shop;
+  if (shop) {
+    res.setHeader(
+      "Content-Security-Policy",
+      `frame-ancestors https://${shop} https://admin.shopify.com;`
+    );
+  }
+  next();
+});
 
 // Set up Shopify authentication and webhook handling
 app.get(shopify.config.auth.path, shopify.auth.begin());
@@ -343,9 +353,6 @@ async function upsertMetafield(
 app.get("/test", async (_req, res) => {
   const headers = _req.headers;
   const shopDomain = "" + headers["x-shop-domain"];
-  const sessions = await shopify.config.sessionStorage.findSessionsByShop(
-    shopDomain
-  );
   const user = _req.query.logged_in_customer_id
     ? _req.query.logged_in_customer_id
     : "unknown";
