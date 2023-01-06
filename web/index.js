@@ -276,12 +276,14 @@ app.post("/api/metafieldDelete", async (_req, res) => {
     session: res.locals.shopify.session,
   });
 
+  const metafieldDefinitions = await getMetafieldDefinitionsForShop();
+
   try {
     await client.query({
       data: {
         query: METAFIELD_DEFINITION_DELETE_MUTATION,
         variables: {
-          id: _req.body.id,
+          id: metafieldDefinitions.find((m) => m.key == _req.body.key).id,
           deleteAllAssociatedMetafields: true,
         },
       },
@@ -439,6 +441,7 @@ async function getMetafieldDefinitionsForShop(
       metafieldDefinitions(ownerType:CUSTOMER,first:10){
         edges{
           node{
+            id,
             name,
             key,
             description,

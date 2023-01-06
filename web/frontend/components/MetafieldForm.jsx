@@ -71,7 +71,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
       (async () => {
         const response = await fetch("/api/metafieldDelete", {
           method:"POST",
-          body: JSON.stringify({id: Metafield.id}),
+          body: JSON.stringify({key: Metafield.key}),
           headers: { "Content-Type": "application/json" },
         });
         navigate(`/`);
