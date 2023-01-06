@@ -141,7 +141,7 @@ mutation metafieldDefinitionDelete($id: ID!) {
 }`;
 
 const app = express();
-
+/*
 app.use((req, res, next) => {
   const shop = req.query.shop;
   if (shop) {
@@ -152,6 +152,7 @@ app.use((req, res, next) => {
   }
   next();
 });
+*/
 
 // Set up Shopify authentication and webhook handling
 app.get(shopify.config.auth.path, shopify.auth.begin());
