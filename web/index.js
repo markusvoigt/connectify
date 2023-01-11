@@ -141,9 +141,9 @@ mutation metafieldDefinitionDelete($id: ID!) {
 }`;
 
 const STOREFRONT_ACCESS_TOKEN_CREATE_MUTATION = `
-mutation delegateAccessTokenCreate($input: DelegateAccessTokenInput!) {
-  delegateAccessTokenCreate(input: $input) {
-    delegateAccessToken {
+mutation storefrontAccessTokenCreate($input: StorefrontAccessTokenInput!) {
+  storefrontAccessTokenCreate(input: $input) {
+    storefrontAccessToken {
       accessToken
     }
     userErrors {
