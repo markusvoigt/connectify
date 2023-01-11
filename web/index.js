@@ -519,6 +519,8 @@ async function writeMetaFieldsForShop(
 
 app.get("/headlessdata/:customerAccesstoken", async (_req, res) => {
   const storefrontClient = await getStorefrontClientForShop();
+  res.send('ok');
+  /*
   var customerAccessToken = _req.params["customerAccesstoken"];
 
   const response = await storefrontClient.query({
@@ -530,6 +532,7 @@ app.get("/headlessdata/:customerAccesstoken", async (_req, res) => {
     `,
   });
   res.status(200).send(response.body.data);
+  */
 });
 
 async function getStorefrontClientForShop(shop = "markusvoigt.myshopify.com") {
@@ -537,6 +540,7 @@ async function getStorefrontClientForShop(shop = "markusvoigt.myshopify.com") {
   const client = new shopify.api.clients.Graphql({
     session,
   });
+  try{
   let response = await client.query({
     data: {
       query: STOREFRONT_ACCESS_TOKEN_CREATE_MUTATION,
@@ -547,7 +551,10 @@ async function getStorefrontClientForShop(shop = "markusvoigt.myshopify.com") {
       },
     },
   });
-
+}catch(e){
+  console.log(JSON.stringify(e));
+}
+/*
   const storefront_token = response.body.data.storefrontAccessToken.accessToken;
   const storefrontClient = new shopify.api.clients.Storefront({
     domain: shop,
@@ -555,6 +562,7 @@ async function getStorefrontClientForShop(shop = "markusvoigt.myshopify.com") {
     apiVersion: ApiVersion.October22,
   });
   return storefrontClient;
+  /*
 }
 
 app.use(serveStatic(STATIC_PATH, { index: false }));
