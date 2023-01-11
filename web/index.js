@@ -504,9 +504,23 @@ async function writeMetaFieldsForShop(
 
 // headless
 
-app.get("/headlessData/:customerAccesstoken", async (_req, res) => {
-  const session = await getSessionForShop();
+app.get("/headlessdata/:customerAccesstoken", async (_req, res) => {
+  const storefrontClient = await getStorefrontClientForShop();
   var customerAccessToken = _req.params["customerAccesstoken"];
+
+  const response = await storefrontClient.query({
+    data: `
+    customer(customerAccessToken: "${customerAccessToken}") {
+      id,
+      email
+    }
+    `,
+  });
+  res.status(200).send(response.body.data);
+});
+
+async function getStorefrontClientForShop(shop = "markusvoigt.myshopify.com") {
+  const session = await getSessionForShop(shop);
   const adminApiClient = new shopify.api.clients.Rest({ session });
   const storefrontTokenReponse = await adminApiClient.post({
     path: "storefront_access_tokens",
@@ -518,20 +532,12 @@ app.get("/headlessData/:customerAccesstoken", async (_req, res) => {
   });
   const storefront_token = storefrontTokenReponse.body.storefront_access_token;
   const storefrontClient = new shopify.api.clients.Storefront({
-    domain: session?.shop,
+    domain: shop,
     storefrontAccessToken: storefront_token,
     apiVersion: ApiVersion.October22,
   });
-  const response = await storefrontClient.query({
-    data: `
-    customer(customerAccessToken: "${customerAccessToken}") {
-      id,
-      email
-    }
-    `,
-  });
-  res.status(200).send(response.body.data);
-});
+  return storefrontClient;
+}
 
 app.use(serveStatic(STATIC_PATH, { index: false }));
 
