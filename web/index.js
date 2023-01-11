@@ -140,6 +140,19 @@ mutation metafieldDefinitionDelete($id: ID!) {
   }
 }`;
 
+const STOREFRONT_ACCESS_TOKEN_CREATE_MUTATION = `
+mutation delegateAccessTokenCreate($input: DelegateAccessTokenInput!) {
+  delegateAccessTokenCreate(input: $input) {
+    delegateAccessToken {
+      accessToken
+    }
+    userErrors {
+      field
+      message
+    }
+  }
+}`;
+
 const app = express();
 
 app.use((req, res, next) => {
@@ -521,16 +534,21 @@ app.get("/headlessdata/:customerAccesstoken", async (_req, res) => {
 
 async function getStorefrontClientForShop(shop = "markusvoigt.myshopify.com") {
   const session = await getSessionForShop(shop);
-  const adminApiClient = new shopify.api.clients.Rest({ session });
-  const storefrontTokenReponse = await adminApiClient.post({
-    path: "storefront_access_tokens",
+  const client = new shopify.api.clients.Graphql({
+    session,
+  });
+  let response = await client.query({
     data: {
-      storefront_access_token: {
-        title: "Connectify",
+      query: STOREFRONT_ACCESS_TOKEN_CREATE_MUTATION,
+      variables: {
+        input: {
+          title: "Connectify",
+        },
       },
     },
   });
-  const storefront_token = storefrontTokenReponse.body.storefront_access_token;
+
+  const storefront_token = response.body.data.storefrontAccessToken.accessToken;
   const storefrontClient = new shopify.api.clients.Storefront({
     domain: shop,
     storefrontAccessToken: storefront_token,
