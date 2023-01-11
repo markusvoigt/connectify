@@ -542,20 +542,16 @@ async function getStorefrontClientForShop(shop = "markusvoigt.myshopify.com") {
   const client = new shopify.api.clients.Graphql({
     session,
   });
-  try {
-    let response = await client.query({
-      data: {
-        query: STOREFRONT_ACCESS_TOKEN_CREATE_MUTATION,
-        variables: {
-          input: {
-            title: "Connectify",
-          },
+  let response = await client.query({
+    data: {
+      query: STOREFRONT_ACCESS_TOKEN_CREATE_MUTATION,
+      variables: {
+        input: {
+          title: "Connectify",
         },
       },
-    });
-  } catch (e) {
-    console.log(JSON.stringify(e));
-  }
+    },
+  });
 
   const storefront_token = response.body.data.storefrontAccessToken.accessToken;
   const storefrontClient = new shopify.api.clients.Storefront({
