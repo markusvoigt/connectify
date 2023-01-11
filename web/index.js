@@ -6,6 +6,7 @@ import serveStatic from "serve-static";
 import shopify from "./shopify.js";
 import GDPRWebhookHandlers from "./gdpr.js";
 import "@shopify/shopify-api/adapters/node";
+import { ApiVersion } from "@shopify/shopify-api";
 
 const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
 
@@ -500,6 +501,37 @@ async function writeMetaFieldsForShop(
     console.log(e);
   }
 }
+
+// headless
+
+app.get("/headlessData/:customerAccesstoken", async (_req, res) => {
+  const session = await getSessionForShop();
+  var customerAccessToken = _req.params["customerAccesstoken"];
+  const adminApiClient = new shopify.api.clients.Rest({ session });
+  const storefrontTokenReponse = await adminApiClient.post({
+    path: "storefront_access_tokens",
+    data: {
+      storefront_access_token: {
+        title: "Connectify",
+      },
+    },
+  });
+  const storefront_token = storefrontTokenReponse.body.storefront_access_token;
+  const storefrontClient = new shopify.api.clients.Storefront({
+    domain: session?.shop,
+    storefrontAccessToken: storefront_token,
+    apiVersion: ApiVersion.October22,
+  });
+  const response = await storefrontClient.query({
+    data: `
+    customer(customerAccessToken: "${customerAccessToken}") {
+      id,
+      email
+    }
+    `,
+  });
+  res.status(200).send(response.body.data);
+});
 
 app.use(serveStatic(STATIC_PATH, { index: false }));
 
