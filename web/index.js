@@ -553,7 +553,9 @@ async function getStorefrontClientForShop(shop = "markusvoigt.myshopify.com") {
     },
   });
   console.log(JSON.stringify(response.body));
-  const storefront_token = response.body.data.storefrontAccessToken.accessToken;
+  const storefront_token =
+    response.body.data.storefrontAccessTokenCreate.storefrontAccessToken
+      .accessToken;
   const storefrontClient = new shopify.api.clients.Storefront({
     domain: shop,
     storefrontAccessToken: storefront_token,
