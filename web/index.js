@@ -522,13 +522,15 @@ app.get("/headlessdata/:customerAccesstoken", async (_req, res) => {
   res.send("ok");
   var customerAccessToken = _req.params["customerAccesstoken"];
 
-  const response = await storefrontClient.query({
-    query: `
+  let response = await storefrontClient.query({
+    data: {
+      query: `
     customer(customerAccessToken: "${customerAccessToken}") {
       id,
       email
     }
     `,
+    },
   });
   res.status(200).send(response);
 });
