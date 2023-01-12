@@ -519,8 +519,8 @@ async function writeMetaFieldsForShop(
 
 app.get("/headlessdata/:customerAccesstoken", async (_req, res) => {
   const storefrontClient = await getStorefrontClientForShop();
-  var customerAccessToken = _req.params["customerAccesstoken"];
-
+  const customerAccessToken = _req.params["customerAccesstoken"];
+  console.log("Access token:" + customerAccessToken);
   let response = await storefrontClient.query({
     data: `{
     customer(customerAccessToken: "${customerAccessToken}") {
