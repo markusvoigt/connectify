@@ -519,18 +519,14 @@ async function writeMetaFieldsForShop(
 
 app.get("/headlessdata/:customerAccesstoken", async (_req, res) => {
   const storefrontClient = await getStorefrontClientForShop();
-  res.send("ok");
   var customerAccessToken = _req.params["customerAccesstoken"];
 
   let response = await storefrontClient.query({
-    data: {
-      query: `
+    data: `
     customer(customerAccessToken: "${customerAccessToken}") {
       id,
       email
-    }
-    `,
-    },
+    }`,
   });
   res.status(200).send(response);
 });
