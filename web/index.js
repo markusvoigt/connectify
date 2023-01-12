@@ -530,7 +530,7 @@ app.get("/headlessdata/:customerAccesstoken", async (_req, res) => {
     }
     `,
   });
-  res.status(200).send(JSON.stringify(response.body.data));
+  res.status(200).send(response);
 });
 
 async function getStorefrontClientForShop(shop = "markusvoigt.myshopify.com") {
@@ -548,7 +548,7 @@ async function getStorefrontClientForShop(shop = "markusvoigt.myshopify.com") {
       },
     },
   });
-  console.log(JSON.stringify(response.body));
+
   const storefront_token =
     response.body.data.storefrontAccessTokenCreate.storefrontAccessToken
       .accessToken;
