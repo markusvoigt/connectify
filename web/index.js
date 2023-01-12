@@ -522,19 +522,15 @@ app.get("/headlessdata/:customerAccesstoken", async (_req, res) => {
   res.send("ok");
   var customerAccessToken = _req.params["customerAccesstoken"];
 
-  try {
-    await storefrontClient.query({
-      data: `
+  const response = await storefrontClient.query({
+    data: `
     customer(customerAccessToken: "${customerAccessToken}") {
       id,
       email
     }
     `,
-    });
-  } catch (e) {
-    console.log(e);
-  }
-  res.status(200).send("ok");
+  });
+  res.status(200).send(JSON.stringify(response.body.data));
 });
 
 async function getStorefrontClientForShop(shop = "markusvoigt.myshopify.com") {
