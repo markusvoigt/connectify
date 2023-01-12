@@ -533,27 +533,9 @@ app.get("/headlessdata/:customerAccesstoken", async (_req, res) => {
 });
 
 async function getStorefrontClientForShop(shop = "markusvoigt.myshopify.com") {
-  const session = await getSessionForShop(shop);
-  const client = new shopify.api.clients.Graphql({
-    session,
-  });
-  let response = await client.query({
-    data: {
-      query: STOREFRONT_ACCESS_TOKEN_CREATE_MUTATION,
-      variables: {
-        input: {
-          title: "Connectify",
-        },
-      },
-    },
-  });
-
-  const storefront_token =
-    response.body.data.storefrontAccessTokenCreate.storefrontAccessToken
-      .accessToken;
   const storefrontClient = new shopify.api.clients.Storefront({
     domain: shop,
-    storefrontAccessToken: storefront_token,
+    storefrontAccessToken: "d6fb8490870882a71ebb8914b72d7dcd",
     apiVersion: ApiVersion.October22,
   });
   return storefrontClient;
