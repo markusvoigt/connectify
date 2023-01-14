@@ -520,7 +520,7 @@ async function writeMetaFieldsForShop(
 // headless
 
 app.post("/metafields", async (_req, res) => {
-  const customerAccessToken = _req.body.customerAccesstoken;
+  const customerAccessToken = _req.body.customerAccessToken;
   const storefrontAccessToken = _req.body.storefrontAccessToken;
   const shop = _req.body.shop;
   const customerID = await validateCustomerID(
