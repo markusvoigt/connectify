@@ -523,6 +523,7 @@ app.post("/metafields", async (_req, res) => {
   const customerAccessToken = _req.body.customerAccessToken;
   const storefrontAccessToken = _req.body.storefrontAccessToken;
   const shop = _req.body.shop;
+  console.log(_req.body);
   const customerID = await validateCustomerID(
     customerAccessToken,
     storefrontAccessToken,
