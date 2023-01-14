@@ -424,12 +424,14 @@ async function getMetafieldsForCustomer(customerID, session) {
   const client = new shopify.api.clients.Graphql({
     session,
   });
+  const gqlID =
+    customerID[0] != "g" ? "gid://shopify/Customer/" + customerID : customerID;
 
   const response = await client.query({
     data: {
       query: CUSTOMER_METAFIELDS_QUERY,
       variables: {
-        customerID: "gid://shopify/Customer/" + customerID,
+        customerID: gqlID,
       },
     },
   });
@@ -520,7 +522,6 @@ async function writeMetaFieldsForShop(
 app.get("/headlessdata/:customerAccesstoken", async (_req, res) => {
   const storefrontClient = await getStorefrontClientForShop();
   const customerAccessToken = _req.params["customerAccesstoken"];
-  console.log("Access token:" + customerAccessToken);
   let response = await storefrontClient.query({
     data: `{
     customer(customerAccessToken: "${customerAccessToken}") {
@@ -529,7 +530,19 @@ app.get("/headlessdata/:customerAccesstoken", async (_req, res) => {
     }
   }`,
   });
-  res.status(200).send(response);
+  if (!response.body.data.customer.id) {
+    res.status(403).send("Invalid customer access token");
+    return;
+  }
+  const session = await getSessionForShop();
+  const allMetaFields = getMetafieldDefinitionsForShop();
+  const customerMetaFields = getMetafieldsForCustomer(
+    response.body.data.customer.id,
+    session
+  );
+  await Promise.all([allMetaFields, customerMetaFields]);
+
+  res.status(200).send(allMetaFields);
 });
 
 async function getStorefrontClientForShop(shop = "markusvoigt.myshopify.com") {
