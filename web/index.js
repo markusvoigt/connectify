@@ -543,11 +543,14 @@ app.get("/headlessdata/:customerAccesstoken", async (_req, res) => {
   // include all definitions for metafields not currently set for the customer object
   for (let metafield of allMetaFields) {
     if (!customerMetaFields.find((m) => m.key == metafield.key)) {
-      customerMetaFields.push(metafield);
+      //customerMetaFields.push(metafield);
     }
   }
-
-  res.status(200).send(customerMetaFields);
+  const info = {
+    customerMetaFields,
+    allMetaFields,
+  };
+  res.status(200).send(info);
 });
 
 async function getStorefrontClientForShop(shop = "markusvoigt.myshopify.com") {
