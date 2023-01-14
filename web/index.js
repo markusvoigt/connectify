@@ -535,12 +535,11 @@ app.get("/headlessdata/:customerAccesstoken", async (_req, res) => {
     return;
   }
   const session = await getSessionForShop();
-  const allMetaFields = getMetafieldDefinitionsForShop();
-  const customerMetaFields = getMetafieldsForCustomer(
+  const allMetaFields = await getMetafieldDefinitionsForShop();
+  const customerMetaFields = await getMetafieldsForCustomer(
     response.body.data.customer.id,
     session
   );
-  await Promise.all([allMetaFields, customerMetaFields]);
 
   res.status(200).send(allMetaFields);
 });
