@@ -519,6 +519,62 @@ async function writeMetaFieldsForShop(
 
 // headless
 
+app.post("/metafields", async (_req, res) => {
+  const customerAccessToken = _req.body.customerAccesstoken;
+  const storefrontAccessToken = _req.body.storefrontAccessToken;
+  const shop = _req.body.shop;
+  const customerID = await validateCustomerID(
+    customerAccessToken,
+    storefrontAccessToken,
+    shop
+  );
+  if (!customerID) {
+    res.status(401).send("Invalid authentication");
+    return;
+  }
+  const session = await getSessionForShop(shop);
+  const allMetafields = await getMetafieldDefinitionsForShop(shop);
+  const customerMetafields = await getMetafieldsForCustomer(
+    customerID,
+    session
+  );
+
+  for (let customerMetafield of customerMetafields) {
+    const definition = allMetafields.find(
+      (m) => m.key == customerMetafield.key
+    );
+    definition.value = customerMetafield.value;
+    definition.customerMetafieldID = customerMetafield.id;
+  }
+  res.status(200).send(allMetafields);
+});
+
+async function validateCustomerID(
+  customerAccessToken,
+  storefrontAccessToken,
+  shop
+) {
+  const storefrontClient = new shopify.api.clients.Storefront({
+    domain: shop,
+    storefrontAccessToken: storefrontAccessToken,
+    apiVersion: ApiVersion.October22,
+  });
+  try {
+    let response = await storefrontClient.query({
+      data: `{
+    customer(customerAccessToken: "${customerAccessToken}") {
+      id,
+      email
+    }
+  }`,
+    });
+    return response.body.data.customer.id;
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
 app.get("/headlessdata/:customerAccesstoken", async (_req, res) => {
   const storefrontClient = await getStorefrontClientForShop();
   const customerAccessToken = _req.params["customerAccesstoken"];
