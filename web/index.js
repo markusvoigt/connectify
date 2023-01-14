@@ -556,7 +556,7 @@ async function validateCustomerID(
 ) {
   const storefrontClient = new shopify.api.clients.Storefront({
     domain: shop,
-    storefrontAccessToken: storefrontAccessToken,
+    storefrontAccessToken,
     apiVersion: ApiVersion.October22,
   });
   try {
