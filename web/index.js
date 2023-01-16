@@ -532,7 +532,7 @@ app.options("/metafields"),
 
 app.post("/metafields", async (_req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
-  console.log(_req.body);
+
   const customerAccessToken =
     _req.body.customerAccessToken || "e8555c7c0736bb7a5c8139d7ac6be9ac";
   const storefrontAccessToken = _req.body.storefrontAccessToken;
@@ -568,11 +568,7 @@ async function validateCustomerID(
   storefrontAccessToken,
   shop
 ) {
-  const storefrontClient = new shopify.api.clients.Storefront({
-    domain: shop,
-    storefrontAccessToken,
-    apiVersion: ApiVersion.October22,
-  });
+  const storefrontClient = await getStorefrontClientForShop();
   try {
     let response = await storefrontClient.query({
       data: `{
