@@ -155,6 +155,13 @@ mutation storefrontAccessTokenCreate($input: StorefrontAccessTokenInput!) {
 
 const app = express();
 
+var allowCrossDomain = function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "example.com");
+  res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  next();
+};
+
 app.use((req, res, next) => {
   const shop = req.query.shop;
   if (shop) {
@@ -180,7 +187,7 @@ app.post(
 
 // All endpoints after this point will require an active session
 app.use("/api/*", shopify.validateAuthenticatedSession());
-
+app.use(allowCrossDomain);
 app.use(express.json());
 
 app.get("/api/products/count", async (_req, res) => {
@@ -523,7 +530,6 @@ app.post("/metafields", async (_req, res) => {
   const customerAccessToken = _req.body.customerAccessToken;
   const storefrontAccessToken = _req.body.storefrontAccessToken;
   const shop = _req.body.shop;
-  console.log(_req.body);
   const customerID = await validateCustomerID(
     customerAccessToken,
     storefrontAccessToken,
