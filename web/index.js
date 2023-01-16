@@ -164,6 +164,13 @@ app.use((req, res, next) => {
       `frame-ancestors https://${shop} https://admin.shopify.com;`
     );
   }
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "POST");
+    res.setHeader(
+      "Access-Control-Allow-Headers",
+      "X-Requested-With,content-type"
+    );
+    res.sendStatus(200);
   next();
 });
 
@@ -519,19 +526,21 @@ async function writeMetaFieldsForShop(
 
 // headless
 
+app.use(function())
+
 app.options("/metafields"),
   (req, res) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Methods", "POST");
     res.setHeader(
       "Access-Control-Allow-Headers",
-      "Content-Type",
-      "X-Requested-With"
+      "X-Requested-With, content-type",
     );
     res.sendStatus(200);
   };
 
 app.post("/metafields", async (_req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
   const customerAccessToken = _req.body.customerAccessToken;
   const storefrontAccessToken = _req.body.storefrontAccessToken;
   const shop = _req.body.shop;
