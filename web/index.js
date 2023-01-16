@@ -519,16 +519,15 @@ async function writeMetaFieldsForShop(
 
 // headless
 
-app.options("/metafields"),
-  (req, res) => {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Methods", "POST");
-    res.setHeader(
-      "Access-Control-Allow-Headers",
-      "X-Requested-With, content-type"
-    );
-    res.sendStatus(200);
-  };
+app.options("/metafields", (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "X-Requested-With, content-type"
+  );
+  res.sendStatus(200);
+});
 
 app.post("/metafields", async (_req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
