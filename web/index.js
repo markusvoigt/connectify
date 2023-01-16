@@ -164,13 +164,6 @@ app.use((req, res, next) => {
       `frame-ancestors https://${shop} https://admin.shopify.com;`
     );
   }
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "POST");
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "X-Requested-With,content-type"
-  );
-  res.sendStatus(200);
   next();
 });
 
