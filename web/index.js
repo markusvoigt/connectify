@@ -568,7 +568,11 @@ async function validateCustomerID(
   storefrontAccessToken,
   shop
 ) {
-  const storefrontClient = await getStorefrontClientForShop();
+  const storefrontClient = new shopify.api.clients.Storefront({
+    domain: shop,
+    storefrontAccessToken: storefrontAccessToken,
+    apiVersion: ApiVersion.October22,
+  });
   try {
     let response = await storefrontClient.query({
       data: `{
