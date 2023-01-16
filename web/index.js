@@ -519,7 +519,12 @@ async function writeMetaFieldsForShop(
 
 // headless
 
-app.post("/metafields", cors(), async (_req, res) => {
+var corsOptions = {
+  origin: "*",
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+
+app.post("/metafields", cors(corsOptions), async (_req, res) => {
   const customerAccessToken = _req.body.customerAccessToken;
   const storefrontAccessToken = _req.body.storefrontAccessToken;
   const shop = _req.body.shop;
