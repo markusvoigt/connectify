@@ -7,12 +7,7 @@ import shopify from "./shopify.js";
 import GDPRWebhookHandlers from "./gdpr.js";
 import "@shopify/shopify-api/adapters/node";
 import { ApiVersion } from "@shopify/shopify-api";
-var cors = require("cors");
-
-var corsOptions = {
-  origin: "*",
-  optionsSuccessStatus: 200,
-};
+import cors from "cors";
 
 const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
 
@@ -524,7 +519,7 @@ async function writeMetaFieldsForShop(
 
 // headless
 
-app.post("/metafields", cors(corsOptions), async (_req, res) => {
+app.post("/metafields", cors(), async (_req, res) => {
   const customerAccessToken = _req.body.customerAccessToken;
   const storefrontAccessToken = _req.body.storefrontAccessToken;
   const shop = _req.body.shop;
