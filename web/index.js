@@ -2,6 +2,7 @@
 import { join } from "path";
 import { readFileSync } from "fs";
 import express from "express";
+import cors from "cors";
 import serveStatic from "serve-static";
 import shopify from "./shopify.js";
 import GDPRWebhookHandlers from "./gdpr.js";
@@ -154,6 +155,7 @@ mutation storefrontAccessTokenCreate($input: StorefrontAccessTokenInput!) {
 }`;
 
 const app = express();
+app.use(cors);
 
 app.use((req, res, next) => {
   const shop = req.query.shop;
