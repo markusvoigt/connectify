@@ -14,7 +14,8 @@
   "dependencies": {
     "@shopify/app": "3.28.0",
     "@shopify/cli": "3.28.0",
-    "@shopify/shopify-api": "^6.0.2"
+    "@shopify/shopify-api": "^6.0.2",
+    "cors": "^2.8.5"
   },
   "author": "markusvoigt"
 }

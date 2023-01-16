@@ -1,0 +1,22 @@
+input[type=text], input[type=number], input[type=date] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+  }
+  input[type=button]{
+    border: none;
+    padding: 8px 16px;
+    text-decoration: none;
+    margin: 4px 2px;
+    cursor: pointer;
+    opacity: 1.0;
+  }
+  input[type=button]:disabled {
+    border: none;
+    padding: 8px 16px;
+    text-decoration: none;
+    margin: 4px 2px;
+    cursor: pointer;
+    opacity: 0.8;
+  }

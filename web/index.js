@@ -7,6 +7,12 @@ import shopify from "./shopify.js";
 import GDPRWebhookHandlers from "./gdpr.js";
 import "@shopify/shopify-api/adapters/node";
 import { ApiVersion } from "@shopify/shopify-api";
+var cors = require("cors");
+
+var corsOptions = {
+  origin: "*",
+  optionsSuccessStatus: 200,
+};
 
 const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
 
@@ -155,13 +161,6 @@ mutation storefrontAccessTokenCreate($input: StorefrontAccessTokenInput!) {
 
 const app = express();
 
-var allowCrossDomain = function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
-  res.header("Access-Control-Allow-Headers", "Content-Type");
-  next();
-};
-
 app.use((req, res, next) => {
   const shop = req.query.shop;
   if (shop) {
@@ -187,7 +186,6 @@ app.post(
 
 // All endpoints after this point will require an active session
 app.use("/api/*", shopify.validateAuthenticatedSession());
-app.use(allowCrossDomain);
 app.use(express.json());
 
 app.get("/api/products/count", async (_req, res) => {
@@ -526,8 +524,7 @@ async function writeMetaFieldsForShop(
 
 // headless
 
-app.post("/metafields", async (_req, res) => {
-  res.header("Access-Control-Allow-Origin", "*");
+app.post("/metafields", cors(corsOptions), async (_req, res) => {
   const customerAccessToken = _req.body.customerAccessToken;
   const storefrontAccessToken = _req.body.storefrontAccessToken;
   const shop = _req.body.shop;
