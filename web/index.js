@@ -156,7 +156,7 @@ mutation storefrontAccessTokenCreate($input: StorefrontAccessTokenInput!) {
 const app = express();
 
 var allowCrossDomain = function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "example.com");
+  res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
   res.header("Access-Control-Allow-Headers", "Content-Type");
   next();
@@ -527,6 +527,7 @@ async function writeMetaFieldsForShop(
 // headless
 
 app.post("/metafields", async (_req, res) => {
+  res.header("Access-Control-Allow-Origin", "*");
   const customerAccessToken = _req.body.customerAccessToken;
   const storefrontAccessToken = _req.body.storefrontAccessToken;
   const shop = _req.body.shop;
