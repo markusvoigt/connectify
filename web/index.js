@@ -2,7 +2,7 @@
 import { join } from "path";
 import { readFileSync } from "fs";
 import express from "express";
-import * as cors from "cors";
+import cors from "cors";
 import serveStatic from "serve-static";
 import shopify from "./shopify.js";
 import GDPRWebhookHandlers from "./gdpr.js";
