@@ -530,13 +530,15 @@ app.options("/metafields"),
     res.sendStatus(200);
   };
 
-app.post("/metafields", async (_req, res) => {
+app.post("/api/metafields", async (_req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   console.log(`Body received:${JSON.stringify(_req.body)}`);
   const customerAccessToken =
     _req.body.customerAccessToken || "e8555c7c0736bb7a5c8139d7ac6be9ac";
-  const storefrontAccessToken = _req.body.storefrontAccessToken;
-  const shop = _req.body.shop;
+  const storefrontAccessToken =
+    _req.body.storefrontAccessToken || "d6fb8490870882a71ebb8914b72d7dcd";
+  const shop = _req.body.shop || "markusvoigt.myshopify.com";
+
   const customerID = await validateCustomerID(
     customerAccessToken,
     storefrontAccessToken,
