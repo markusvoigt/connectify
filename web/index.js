@@ -519,12 +519,19 @@ async function writeMetaFieldsForShop(
 
 // headless
 
-var corsOptions = {
-  origin: "*",
-  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-};
+app.options("/metafields"),
+  (req, res) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "POST");
+    res.setHeader(
+      "Access-Control-Allow-Headers",
+      "Content-Type",
+      "X-Requested-With"
+    );
+    res.sendStatus(200);
+  };
 
-app.post("/metafields", cors(corsOptions), async (_req, res) => {
+app.post("/metafields", async (_req, res) => {
   const customerAccessToken = _req.body.customerAccessToken;
   const storefrontAccessToken = _req.body.storefrontAccessToken;
   const shop = _req.body.shop;
