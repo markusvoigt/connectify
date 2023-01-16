@@ -530,9 +530,9 @@ app.options("/metafields"),
     res.sendStatus(200);
   };
 
-app.post("/api/metafields", async (_req, res) => {
+app.post("/metafields", async (_req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
-  console.log(`Body received:${JSON.stringify(_req.body)}`);
+  console.log(`Body received:${JSON.stringify(_req)}`);
   const customerAccessToken =
     _req.body.customerAccessToken || "e8555c7c0736bb7a5c8139d7ac6be9ac";
   const storefrontAccessToken =
