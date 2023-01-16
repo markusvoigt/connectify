@@ -530,7 +530,6 @@ app.options("/metafields", (req, res) => {
 });
 
 app.post("/metafields", async (_req, res) => {
-  console.log(_req.body);
   const customerAccessToken = _req.body.customerAccessToken;
   const storefrontAccessToken = _req.body.storefrontAccessToken;
   const shop = _req.body.shop || "markusvoigt.myshopify.com";
@@ -558,7 +557,10 @@ app.post("/metafields", async (_req, res) => {
     definition.value = customerMetafield.value;
     definition.customerMetafieldID = customerMetafield.id;
   }
-  res.status(200).send(allMetafields);
+  res
+    .header("Access-Control-Allow-Origin", "*")
+    .status(200)
+    .send(allMetafields);
 });
 
 async function validateCustomerID(
