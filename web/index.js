@@ -532,7 +532,7 @@ app.options("/metafields", (req, res) => {
 app.post("/metafields", async (_req, res) => {
   const customerAccessToken = _req.body.customerAccessToken;
   const storefrontAccessToken = _req.body.storefrontAccessToken;
-  const shop = _req.body.shop || "markusvoigt.myshopify.com";
+  const shop = _req.body.shop;
 
   const customerID = await validateCustomerID(
     customerAccessToken,
