@@ -582,6 +582,7 @@ async function validateCustomerID(
     }
   }`,
     });
+    if (!data.customer) return null;
     return response.body.data.customer.id;
   } catch (e) {
     console.log(e);
