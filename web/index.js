@@ -155,7 +155,6 @@ mutation storefrontAccessTokenCreate($input: StorefrontAccessTokenInput!) {
 }`;
 
 const app = express();
-app.use(cors);
 
 app.use((req, res, next) => {
   const shop = req.query.shop;
@@ -520,7 +519,7 @@ async function writeMetaFieldsForShop(
 
 // headless
 
-app.post("/metafields", async (_req, res) => {
+app.post("/metafields", cors(), async (_req, res) => {
   const customerAccessToken = _req.body.customerAccessToken;
   const storefrontAccessToken = _req.body.storefrontAccessToken;
   const shop = _req.body.shop;
