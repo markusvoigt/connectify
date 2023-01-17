@@ -533,6 +533,10 @@ app.post("/metafields", async (_req, res) => {
   const customerAccessToken = _req.body.customerAccessToken;
   const storefrontAccessToken = _req.body.storefrontAccessToken;
   const shop = _req.body.shop;
+  if (!customerAccessToken || !storefrontAccessToken || !shop) {
+    res.status(401).send("Missing data");
+    return;
+  }
 
   const customerID = await validateCustomerID(
     customerAccessToken,
@@ -582,7 +586,7 @@ async function validateCustomerID(
     }
   }`,
     });
-    if (!data.customer) return null;
+    if (!response.body.data.customer) return null;
     return response.body.data.customer.id;
   } catch (e) {
     console.log(e);
