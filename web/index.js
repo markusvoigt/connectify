@@ -377,12 +377,15 @@ async function upsertMetafield(
   const client = new shopify.api.clients.Graphql({
     session,
   });
+
+  const gqlID =
+    customerID[0] != "g" ? "gid://shopify/Customer/" + customerID : customerID;
   const response = await client.query({
     data: {
       query: CUSTOMER_METAFIELDS_UPSERT_MUTATION,
       variables: {
         input: {
-          id: "gid://shopify/Customer/" + customerID,
+          id: gqlID,
           metafields: [
             {
               id: metafieldID,
@@ -630,7 +633,7 @@ app.post("/submitChanges", async (_req, res) => {
     else
       await upsertMetafield(
         session,
-        user,
+        customerID,
         metafield.key,
         updates.find((m) => m.key == metafield.key).value,
         metafield.type,
