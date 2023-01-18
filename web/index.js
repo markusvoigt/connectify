@@ -594,6 +594,66 @@ async function validateCustomerID(
   }
 }
 
+app.options("/submitChanges", (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "X-Requested-With, content-type"
+  );
+  res.sendStatus(200);
+});
+
+app.post("/submitChanges", async (_req, res) => {
+  // Auth by customer access token
+  const customerAccessToken = _req.body.customerAccessToken;
+  const storefrontAccessToken = _req.body.storefrontAccessToken;
+  const shop = _req.body.shop;
+  if (!customerAccessToken || !storefrontAccessToken || !shop) {
+    res.status(401).send("Missing data");
+    return;
+  }
+
+  const customerID = await validateCustomerID(
+    customerAccessToken,
+    storefrontAccessToken,
+    shop
+  );
+  const session = await getSessionForShop(shop);
+
+  const updates = _req.body.updates;
+
+  const currentMetafields = await getMetafieldsForCustomer(customerID, session);
+  for (let metafield of currentMetafields) {
+    const value = updates.find((m) => m.key == metafield.key).value || "";
+    if (value == "") deleteMetafield(session, metafield.id);
+    else
+      await upsertMetafield(
+        session,
+        user,
+        metafield.key,
+        updates.find((m) => m.key == metafield.key).value,
+        metafield.type,
+        metafield.id
+      );
+  }
+  for (let update of updates) {
+    // if not already in metafields
+    // upsert without ID aka insert
+    if (!currentMetafields.find((m) => m.key == update.key)) {
+      await upsertMetafield(
+        session,
+        user,
+        update.key,
+        update.value,
+        update.type,
+        null
+      );
+    }
+  }
+  res.status(200).send("Metafields updated");
+});
+
 app.get("/headlessdata/:customerAccesstoken", async (_req, res) => {
   const storefrontClient = await getStorefrontClientForShop();
   const customerAccessToken = _req.params["customerAccesstoken"];
