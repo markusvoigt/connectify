@@ -654,7 +654,10 @@ app.post("/submitChanges", async (_req, res) => {
       );
     }
   }
-  res.status(200).send("Metafields updated");
+  res
+    .header("Access-Control-Allow-Origin", "*")
+    .status(200)
+    .send("Metafields updated");
 });
 
 app.get("/headlessdata/:customerAccesstoken", async (_req, res) => {
