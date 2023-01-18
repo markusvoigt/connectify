@@ -399,6 +399,7 @@ async function upsertMetafield(
       },
     },
   });
+  console.log(JSON.stringify(response));
 }
 
 app.get("/test", async (_req, res) => {
