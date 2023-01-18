@@ -646,7 +646,7 @@ app.post("/submitChanges", async (_req, res) => {
     if (!currentMetafields.find((m) => m.key == update.key)) {
       await upsertMetafield(
         session,
-        user,
+        customerID,
         update.key,
         update.value,
         update.type,
