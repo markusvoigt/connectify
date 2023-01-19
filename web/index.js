@@ -597,33 +597,6 @@ async function validateCustomer(
   return result.data.data.customer.id;
 }
 
-async function validateCustomerID(
-  customerAccessToken,
-  storefrontAccessToken,
-  shop
-) {
-  const storefrontClient = new shopify.api.clients.Storefront({
-    domain: shop,
-    storefrontAccessToken: storefrontAccessToken,
-    apiVersion: ApiVersion.October22,
-  });
-  try {
-    let response = await storefrontClient.query({
-      data: `{
-    customer(customerAccessToken: "${customerAccessToken}") {
-      id,
-      email
-    }
-  }`,
-    });
-    if (!response.body.data.customer) return null;
-    return response.body.data.customer.id;
-  } catch (e) {
-    console.log(e);
-    return null;
-  }
-}
-
 app.options("/submitChanges", (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST");
@@ -687,48 +660,6 @@ app.post("/submitChanges", async (_req, res) => {
     .status(200)
     .send("Metafields updated");
 });
-
-app.get("/headlessdata/:customerAccesstoken", async (_req, res) => {
-  const storefrontClient = await getStorefrontClientForShop();
-  const customerAccessToken = _req.params["customerAccesstoken"];
-  let response = await storefrontClient.query({
-    data: `{
-    customer(customerAccessToken: "${customerAccessToken}") {
-      id,
-      email
-    }
-  }`,
-  });
-  if (!response.body.data.customer.id) {
-    res.status(403).send("Invalid customer access token");
-    return;
-  }
-  const session = await getSessionForShop();
-  const allMetafields = await getMetafieldDefinitionsForShop();
-  const customerMetafields = await getMetafieldsForCustomer(
-    response.body.data.customer.id,
-    session
-  );
-
-  for (let customerMetafield of customerMetafields) {
-    const definition = allMetafields.find(
-      (m) => m.key == customerMetafield.key
-    );
-    definition.value = customerMetafield.value;
-    definition.customerMetafieldID = customerMetafield.id;
-  }
-
-  res.status(200).send(allMetafields);
-});
-
-async function getStorefrontClientForShop(shop = "markusvoigt.myshopify.com") {
-  const storefrontClient = new shopify.api.clients.Storefront({
-    domain: shop,
-    storefrontAccessToken: "d6fb8490870882a71ebb8914b72d7dcd",
-    apiVersion: ApiVersion.October22,
-  });
-  return storefrontClient;
-}
 
 app.use(serveStatic(STATIC_PATH, { index: false }));
 
