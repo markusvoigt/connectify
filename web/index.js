@@ -577,7 +577,7 @@ async function validateCustomer(
   shop
 ) {
   const response = await axios.post(
-    `https://${shop}.myshopify.com/api/2021-07/graphql.json`,
+    `https://${shop}/api/2023-01/graphql.json`,
     {
       query: `{
       customer(customerAccessToken: "${customerAccessToken}") {
@@ -593,7 +593,7 @@ async function validateCustomer(
       },
     }
   );
-  console.log(response);
+  console.log(response.body);
   if (!response.body.data.customer) return null;
   return response.body.data.customer.id;
 }
