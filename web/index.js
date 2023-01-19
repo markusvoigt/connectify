@@ -588,7 +588,7 @@ async function validateCustomer(
     },
     {
       headers: {
-        "X-Shopify-Storefront-Access-Token": storefrontAccessToken,
+        "X-Shopify-Storefront-Private-Token": storefrontAccessToken,
         "Content-Type": "application/json",
       },
     }
