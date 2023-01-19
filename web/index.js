@@ -609,6 +609,7 @@ app.options("/submitChanges", (req, res) => {
 
 app.post("/submitChanges", async (_req, res) => {
   // Auth by customer access token
+  console.log(_req.body);
   const customerAccessToken = _req.body.customerAccessToken;
   const storefrontAccessToken = _req.body.storefrontAccessToken;
   const shop = _req.body.shop;
