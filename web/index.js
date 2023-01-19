@@ -576,31 +576,26 @@ async function validateCustomer(
   storefrontAccessToken,
   shop
 ) {
-  const headers = {
-    "Content-Type": "application/json",
-    "Shopify-Storefront-Private-Token": storefrontAccessToken,
-  };
-
-  const graphqlQuery = {
-    operationName: "query",
-    query: `{
+  const response = await axios.post(
+    `https://${shop}.myshopify.com/api/2021-07/graphql.json`,
+    {
+      query: `{
       customer(customerAccessToken: "${customerAccessToken}") {
         id,
         email
       }
     }`,
-    variables: {},
-  };
-
-  axios
-    .post(`https://${shop}/2023-01/graphql.json`, graphqlQuery, {
-      headers: headers,
-    })
-    .then(function (response) {
-      console.log(response.body);
-      if (!response.body.data.customer) return null;
-      return response.body.data.customer.id;
-    });
+    },
+    {
+      headers: {
+        "X-Shopify-Storefront-Access-Token": storefrontAccessToken,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  console.log(response);
+  if (!response.body.data.customer) return null;
+  return response.body.data.customer.id;
 }
 
 async function validateCustomerID(
