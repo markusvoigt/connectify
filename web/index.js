@@ -576,7 +576,7 @@ async function validateCustomer(
   storefrontAccessToken,
   shop
 ) {
-  const result = axios({
+  const result = await axios({
     headers: {
       "Content-Type": "application/json",
       "Shopify-Storefront-Private-Token": storefrontAccessToken,
