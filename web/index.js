@@ -597,7 +597,7 @@ async function validateCustomer(
       headers: headers,
     })
     .then(function (response) {
-      console.log(response);
+      console.log(response.body);
       if (!response.body.data.customer) return null;
       return response.body.data.customer.id;
     });
