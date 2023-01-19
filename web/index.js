@@ -576,26 +576,32 @@ async function validateCustomer(
   storefrontAccessToken,
   shop
 ) {
-  const response = await axios.post(
-    `https://${shop}/api/2023-01/graphql.json`,
-    {
-      query: `{
-      customer(customerAccessToken: "${customerAccessToken}") {
-        id,
-        email
-      }
-    }`,
+  axios({
+    headers: {
+      "Content-Type": "application/json",
+      "Shopify-Storefront-Private-Token": storefrontAccessToken,
     },
-    {
-      headers: {
-        "X-Shopify-Storefront-Private-Token": storefrontAccessToken,
-        "Content-Type": "application/json",
-      },
-    }
-  );
-  console.log(response.body);
-  if (!response.body.data.customer) return null;
-  return response.body.data.customer.id;
+    method: "POST",
+    data: {
+      query: `{
+        customer(customerAccessToken: "${customerAccessToken}") {
+          id,
+          email
+        }
+      }`,
+      variables: {},
+    },
+    url: `https://${shop}/api/2023-01/graphql.json`,
+  })
+    .then((result) => {
+      console.log(result);
+      if (!result.body.data.customer) return null;
+      return result.body.data.customer.id;
+    })
+    .catch((error) => {
+      console.log(error);
+      return null;
+    });
 }
 
 async function validateCustomerID(
