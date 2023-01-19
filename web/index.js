@@ -593,7 +593,6 @@ async function validateCustomer(
     },
     url: `https://${shop}/api/2023-01/graphql.json`,
   });
-  console.log(result.data.data.customer.id);
   if (!result.data.data.customer) return null;
   return result.data.data.customer.id;
 }
@@ -645,11 +644,12 @@ app.post("/submitChanges", async (_req, res) => {
     return;
   }
 
-  const customerID = await validateCustomerID(
+  const customerID = await validateCustomer(
     customerAccessToken,
     storefrontAccessToken,
     shop
   );
+
   const session = await getSessionForShop(shop);
 
   const updates = _req.body.updates;
