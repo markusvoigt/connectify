@@ -542,7 +542,7 @@ app.post("/metafields", async (_req, res) => {
     return;
   }
 
-  const customerID = validateCustomer(
+  const customerID = await validateCustomer(
     customerAccessToken,
     storefrontAccessToken,
     shop
@@ -571,8 +571,12 @@ app.post("/metafields", async (_req, res) => {
     .send(allMetafields);
 });
 
-function validateCustomer(customerAccessToken, storefrontAccessToken, shop) {
-  axios({
+async function validateCustomer(
+  customerAccessToken,
+  storefrontAccessToken,
+  shop
+) {
+  const result = axios({
     headers: {
       "Content-Type": "application/json",
       "Shopify-Storefront-Private-Token": storefrontAccessToken,
@@ -588,16 +592,10 @@ function validateCustomer(customerAccessToken, storefrontAccessToken, shop) {
       variables: {},
     },
     url: `https://${shop}/api/2023-01/graphql.json`,
-  })
-    .then((result) => {
-      console.log(result.data.data.customer.id);
-      if (!result.data.data.customer) return null;
-      return result.data.data.customer.id;
-    })
-    .catch((error) => {
-      console.log(error);
-      return null;
-    });
+  });
+  console.log(result.data.data.customer.id);
+  if (!result.data.data.customer) return null;
+  return result.data.data.customer.id;
 }
 
 async function validateCustomerID(
