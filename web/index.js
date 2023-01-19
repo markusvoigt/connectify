@@ -594,7 +594,7 @@ async function validateCustomer(
     url: `https://${shop}/api/2023-01/graphql.json`,
   })
     .then((result) => {
-      let data = JSON.parse(result);
+      console.log(result.data.data);
       if (!data.data.customer) return null;
       return data.data.customer.id;
     })
