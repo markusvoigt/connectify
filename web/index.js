@@ -8,6 +8,7 @@ import shopify from "./shopify.js";
 import GDPRWebhookHandlers from "./gdpr.js";
 import "@shopify/shopify-api/adapters/node";
 import { ApiVersion } from "@shopify/shopify-api";
+import axios from "axios";
 
 const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
 
@@ -541,7 +542,7 @@ app.post("/metafields", async (_req, res) => {
     return;
   }
 
-  const customerID = await validateCustomerID(
+  const customerID = await validateCustomer(
     customerAccessToken,
     storefrontAccessToken,
     shop
@@ -570,6 +571,38 @@ app.post("/metafields", async (_req, res) => {
     .send(allMetafields);
 });
 
+async function validateCustomer(
+  customerAccessToken,
+  storefrontAccessToken,
+  shop
+) {
+  const headers = {
+    "Content-Type": "application/json",
+    "Shopify-Storefront-Private-Token": storefrontAccessToken,
+  };
+
+  const graphqlQuery = {
+    operationName: "query",
+    query: `{
+      customer(customerAccessToken: "${customerAccessToken}") {
+        id,
+        email
+      }
+    }`,
+    variables: {},
+  };
+
+  axios
+    .post(`https://${shop}/2023-01/graphql.json`, graphqlQuery, {
+      headers: headers,
+    })
+    .then(function (response) {
+      console.log(response);
+      if (!response.body.data.customer) return null;
+      return response.body.data.customer.id;
+    });
+}
+
 async function validateCustomerID(
   customerAccessToken,
   storefrontAccessToken,
@@ -589,7 +622,6 @@ async function validateCustomerID(
     }
   }`,
     });
-    console.log(response);
     if (!response.body.data.customer) return null;
     return response.body.data.customer.id;
   } catch (e) {
