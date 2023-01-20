@@ -290,7 +290,9 @@ app.post("/api/metafieldDelete", async (_req, res) => {
     session: res.locals.shopify.session,
   });
 
-  const metafieldDefinitions = await getMetafieldDefinitionsForShop();
+  const metafieldDefinitions = await getMetafieldDefinitionsForShop(
+    res.locals.shopify.session
+  );
 
   try {
     await client.query({
@@ -447,10 +449,7 @@ async function getMetafieldsForCustomer(customerID, session) {
   return currentMetafields;
 }
 
-async function getMetafieldDefinitionsForShop(
-  shop = "markusvoigt.myshopify.com"
-) {
-  const session = await getSessionForShop(shop);
+async function getMetafieldDefinitionsForShop(session) {
   const client = new shopify.api.clients.Graphql({
     session,
   });
@@ -554,7 +553,7 @@ app.post("/metafields", async (_req, res) => {
   const session = await getSessionForShop(shop);
 
   const [allMetafields, customerMetafields] = await Promise.all([
-    getMetafieldDefinitionsForShop(shop),
+    getMetafieldDefinitionsForShop(session),
     getMetafieldsForCustomer(customerID, session),
   ]);
 
