@@ -552,11 +552,11 @@ app.post("/metafields", async (_req, res) => {
     return;
   }
   const session = await getSessionForShop(shop);
-  const allMetafields = await getMetafieldDefinitionsForShop(shop);
-  const customerMetafields = await getMetafieldsForCustomer(
-    customerID,
-    session
-  );
+
+  const [allMetafields, customerMetafields] = await Promise.all([
+    getMetafieldDefinitionsForShop(shop),
+    getMetafieldsForCustomer(customerID, session),
+  ]);
 
   for (let customerMetafield of customerMetafields) {
     const definition = allMetafields.find(
@@ -609,7 +609,6 @@ app.options("/submitChanges", (req, res) => {
 
 app.post("/submitChanges", async (_req, res) => {
   // Auth by customer access token
-  console.log(_req.body);
   const customerAccessToken = _req.body.customerAccessToken;
   const storefrontAccessToken = _req.body.storefrontAccessToken;
   const shop = _req.body.shop;
