@@ -49,7 +49,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
         });
         console.log(JSON.stringify(response));
         makeClean();
-        navigate(`/`);
+        //navigate(`/`);
       
     })(Metafield);
   };
