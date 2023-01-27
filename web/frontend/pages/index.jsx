@@ -53,7 +53,6 @@ export default function HomePage() {
       </Card>
     ) : null;
 
-
   return (
     <Page fullWidth={!!metafieldMarkup}>
       <TitleBar

@@ -39,8 +39,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
 
     It will be replaced by a different function when the frontend is connected to the backend.
   */
-  const onSubmit = useCallback(
-    (body) => {
+  const onSubmit = (body) => {
       (async () => {
         const parsedBody = body;
         if (Array.isArray(parsedBody.contentType)) parsedBody.contentType = parsedBody.contentType[0];
@@ -54,9 +53,8 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
         });
         makeClean();
         navigate(`/`);
-      })();
-      return { status: "success" };
-    },[Metafield]);
+      
+    })(Metafield);
 
     const deleteMetafield = () => {
       (async () => {
