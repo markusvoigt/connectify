@@ -34,11 +34,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
   const navigate = useNavigate();
   const appBridge = useAppBridge();
   const fetch = useAuthenticatedFetch();
-  /*
-    This is a placeholder function that is triggered when the user hits the "Save" button.
 
-    It will be replaced by a different function when the frontend is connected to the backend.
-  */
   const onSubmit = (body) => {
       (async () => {
         const parsedBody = body;
@@ -55,6 +51,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
         navigate(`/`);
       
     })(Metafield);
+  };
 
     const deleteMetafield = () => {
       (async () => {
@@ -184,6 +181,4 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
           </Layout.Section>
       </Layout>
   );
-}
-
-
+          }
