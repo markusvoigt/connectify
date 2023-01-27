@@ -1,27 +1,18 @@
 import { useState, useCallback } from "react";
 import {
-  Banner,
   Card,
   Form,
   FormLayout,
   TextField,
   Button,
-  Select,
-  Thumbnail,
-  Icon,
-  Stack,
-  TextStyle,
   Layout,
-  EmptyState,
   ChoiceList,
 } from "@shopify/polaris";
 import {
   ContextualSaveBar,
-  ResourcePicker,
   useAppBridge,
   useNavigate,
 } from "@shopify/app-bridge-react";
-import { ImageMajor, AlertMinor } from "@shopify/polaris-icons";
 
 /* Import the useAuthenticatedFetch hook included in the Node app template */
 import { useAuthenticatedFetch, useAppQuery } from "../hooks";
@@ -78,15 +69,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
       })(Metafield);
     }
 
-  /*
-    Sets up the form state with the useForm hook.
 
-    Accepts a "fields" object that sets up each individual field with a default value and validation rules.
-
-    Returns a "fields" object that is destructured to access each of the fields individually, so they can be used in other parts of the component.
-
-    Returns helpers to manage form state, as well as component state that is based on form state.
-  */
   const {
     fields: {
       name,
@@ -123,8 +106,6 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
 
 
 
-
-  /* The form layout, created using Polaris and App Bridge components. */
   return (
       <Layout>
         <Layout.Section>
@@ -166,6 +147,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
               <Card sectioned title="Key">
                 <TextField
                   {...key}
+                  disabled={Metafield?.key}
                   label="Key"
                   labelHidden
                   helpText="Used to reference this metafield"

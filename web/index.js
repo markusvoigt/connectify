@@ -2,12 +2,10 @@
 import { join } from "path";
 import { readFileSync } from "fs";
 import express from "express";
-import cors from "cors";
 import serveStatic from "serve-static";
 import shopify from "./shopify.js";
 import GDPRWebhookHandlers from "./gdpr.js";
 import "@shopify/shopify-api/adapters/node";
-import { ApiVersion } from "@shopify/shopify-api";
 import axios from "axios";
 
 const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
@@ -142,19 +140,6 @@ mutation metafieldDefinitionDelete($id: ID!) {
   }
 }`;
 
-const STOREFRONT_ACCESS_TOKEN_CREATE_MUTATION = `
-mutation storefrontAccessTokenCreate($input: StorefrontAccessTokenInput!) {
-  storefrontAccessTokenCreate(input: $input) {
-    storefrontAccessToken {
-      accessToken
-    }
-    userErrors {
-      field
-      message
-    }
-  }
-}`;
-
 const app = express();
 
 app.use((req, res, next) => {
@@ -183,14 +168,6 @@ app.post(
 // All endpoints after this point will require an active session
 app.use("/api/*", shopify.validateAuthenticatedSession());
 app.use(express.json());
-
-app.get("/api/products/count", async (_req, res) => {
-  const countData = await shopify.api.rest.Product.count({
-    session: res.locals.shopify.session,
-  });
-
-  res.status(200).send(countData);
-});
 
 app.get("/api/metafields/:key", async (_req, res) => {
   const client = new shopify.api.clients.Graphql({
@@ -273,7 +250,6 @@ app.post("/api/metafieldUpdate", async (_req, res) => {
             namespace: _req.body.namespace,
             ownerType: "CUSTOMER",
             pin: false,
-            type: _req.body.contentType,
             visibleToStorefrontApi: true,
           },
         },

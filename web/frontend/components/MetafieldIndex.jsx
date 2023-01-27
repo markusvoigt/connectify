@@ -9,7 +9,6 @@ import {
 
 import { useMedia } from "@shopify/react-hooks";
 
-/* Markup for small screen sizes (mobile) */
 function SmallScreenCard({
   name,
   key,
@@ -53,10 +52,8 @@ function SmallScreenCard({
 export function MetafieldIndex({ Metafields, loading }) {
   const navigate = useNavigate();
 
-  /* Check if screen is small */
   const isSmallScreen = useMedia("(max-width: 640px)");
 
-  /* Map over QRCodes for small screen */
   const smallScreenMarkup = Metafields.map((Metafield) => (
     <SmallScreenCard key={Metafield.key} navigate={navigate} {...Metafield} />
   ));
@@ -68,7 +65,6 @@ export function MetafieldIndex({ Metafields, loading }) {
 
   const rowMarkup = Metafields.map(
     ({ key, name, namespace, description, type }, index) => {
-      /* The form layout, created using Polaris components. Includes the QR code data set above. */
       return (
         <IndexTable.Row
           id={key}
@@ -91,7 +87,6 @@ export function MetafieldIndex({ Metafields, loading }) {
     }
   );
 
-  /* A layout for small screens, built using Polaris components */
   return (
     <Card>
       {isSmallScreen ? (
@@ -116,7 +111,7 @@ export function MetafieldIndex({ Metafields, loading }) {
   );
 }
 
-/* A function to truncate long strings */
+
 function truncate(str, n) {
   return str.length > n ? str.substr(0, n - 1) + "…" : str;
 }

@@ -12,27 +12,12 @@ import { useAppQuery } from "../hooks";
 
 
 export default function HomePage() {
-  /*
-    Add an App Bridge useNavigate hook to set up the navigate function.
-    This function modifies the top-level browser URL so that you can
-    navigate within the embedded app and keep the browser in sync on reload.
-  */
   const navigate = useNavigate();
 
-  /*
-    These are mock values. Setting these values lets you preview the loading markup and the empty state.
-  */
 
   const {
     data: Metafields,
     isLoading,
-  
-    /*
-      react-query provides stale-while-revalidate caching.
-      By passing isRefetching to Index Tables we can show stale data and a loading state.
-      Once the query refetches, IndexTable updates and the loading state is removed.
-      This ensures a performant UX.
-    */
     isRefetching,
   } = useAppQuery({
     url: "/api/metafields",
@@ -42,7 +27,7 @@ export default function HomePage() {
     <MetafieldIndex Metafields={Metafields} loading={isRefetching}/>
   ) : null;
 
-  /* loadingMarkup uses the loading component from AppBridge and components from Polaris  */
+
   const loadingMarkup = isLoading ? (
     <Card sectioned>
       <Loading />
@@ -50,13 +35,11 @@ export default function HomePage() {
     </Card>
   ) : null;
 
-  /* Use Polaris Card and EmptyState components to define the contents of the empty state */
   const emptyStateMarkup =
     !isLoading && !Metafields?.length ? (
       <Card sectioned>
         <EmptyState
           heading="Create unique advanced customer settings"
-          /* This button will take the user to a Create a QR code page */
           action={{
             content: "Create new metafield",
             onAction: () => navigate("/metafields/new"),
@@ -70,9 +53,7 @@ export default function HomePage() {
       </Card>
     ) : null;
 
-  /*
-    Use Polaris Page and TitleBar components to create the page layout,
-    and include the empty state contents set above.
+ 
   */
   return (
     <Page fullWidth={!!metafieldMarkup}>
