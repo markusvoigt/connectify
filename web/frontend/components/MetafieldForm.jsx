@@ -35,7 +35,9 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
   const appBridge = useAppBridge();
   const fetch = useAuthenticatedFetch();
 
-  const onSubmit = async (body) => {
+  const onSubmit = useCallback(
+    (body) => {
+      (async () => {
         const parsedBody = body;
         if (Array.isArray(parsedBody.contentType)) parsedBody.contentType = parsedBody.contentType[0];
 
@@ -46,11 +48,11 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
           body: JSON.stringify(parsedBody),
           headers: { "Content-Type": "application/json" },
         });
-        console.log(JSON.stringify(response));
         makeClean();
         navigate(`/`);
-      
-  };
+      })();
+      return { status: "success" };
+    });
 
     const deleteMetafield = () => {
       (async () => {
@@ -59,8 +61,8 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
           body: JSON.stringify({key: Metafield.key}),
           headers: { "Content-Type": "application/json" },
         });
-        navigate(`/`);
-      })(Metafield);
+        
+      });
     }
 
 
