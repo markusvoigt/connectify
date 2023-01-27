@@ -47,6 +47,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
           body: JSON.stringify(parsedBody),
           headers: { "Content-Type": "application/json" },
         });
+        console.log(JSON.stringify(response));
         makeClean();
         navigate(`/`);
       
