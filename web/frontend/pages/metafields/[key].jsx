@@ -24,11 +24,7 @@ export default function MetafieldEdit() {
   */
 
   const { key } = useParams();
-/*
-  Fetch the QR code.
-  useAppQuery uses useAuthenticatedQuery from App Bridge to authenticate the request.
-  The backend supplements app data with data queried from the Shopify GraphQL Admin API.
-*/
+
 const {
   data: Metafield,
   isLoading,
@@ -36,12 +32,10 @@ const {
 } = useAppQuery({
   url: `/api/metafields/${key}`,
   reactQueryOptions: {
-    /* Disable refetching because the QRCodeForm component ignores changes to its props */
     refetchOnReconnect: false,
   },
 });
 
-  /* Loading action and markup that uses App Bridge and Polaris components */
   if (isLoading || isRefetching) {
     return (
       <Page>

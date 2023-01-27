@@ -35,8 +35,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
   const appBridge = useAppBridge();
   const fetch = useAuthenticatedFetch();
 
-  const onSubmit = (body) => {
-      (async () => {
+  const onSubmit = async (body) => {
         const parsedBody = body;
         if (Array.isArray(parsedBody.contentType)) parsedBody.contentType = parsedBody.contentType[0];
 
@@ -49,9 +48,8 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
         });
         console.log(JSON.stringify(response));
         makeClean();
-        //navigate(`/`);
+        navigate(`/`);
       
-    })(Metafield);
   };
 
     const deleteMetafield = () => {
