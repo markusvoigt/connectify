@@ -49,8 +49,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
           headers: { "Content-Type": "application/json" },
         });
         makeClean();
-        const json = await response.json();
-        console.log(json);
+        navigate(`/`);
       })();
       return { status: "success" };
     },[Metafield]);
