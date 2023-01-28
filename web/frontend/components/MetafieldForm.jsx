@@ -52,7 +52,7 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
         navigate(`/`);
       })();
       return { status: "success" };
-    });
+    },[Metafield]);
 
     const deleteMetafield = () => {
       (async () => {
@@ -61,8 +61,8 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
           body: JSON.stringify({key: Metafield.key}),
           headers: { "Content-Type": "application/json" },
         });
-        
-      });
+        navigate(`/`);
+      },[Metafield]);
     }
 
 
