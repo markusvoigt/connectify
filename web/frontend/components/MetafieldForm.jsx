@@ -54,15 +54,13 @@ export function MetafieldForm({ Metafield: InitialMetafield }) {
       return { status: "success" };
     },[Metafield]);
 
-    const deleteMetafield = () => {
-      (async () => {
+    const deleteMetafield = async () => {
         const response = await fetch("/api/metafieldDelete", {
           method:"POST",
           body: JSON.stringify({key: Metafield.key}),
           headers: { "Content-Type": "application/json" },
         });
         navigate(`/`);
-      },[Metafield]);
     }
 
 
