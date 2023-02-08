@@ -459,7 +459,6 @@ async function getAppInstallationIdForShop(session) {
   });
   const response = await client.query({
     data: APP_INSTALLATION_QUERY,
-    cle,
   });
   return response.body.data.currentAppInstallation.id;
 }
