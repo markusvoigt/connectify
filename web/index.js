@@ -199,7 +199,7 @@ app.get("/api/metafields", async (_req, res) => {
     metaFieldDefinitions.push(definition.node);
   }
   await writeMetaFieldsForShop(
-    res.locals.shopify.shopDomain,
+    res.locals.shopify.session,
     metaFieldDefinitions
   );
   res.status(200).send(metaFieldDefinitions);
@@ -280,7 +280,6 @@ app.post("/api/metafieldDelete", async (_req, res) => {
       },
     });
   } catch (e) {
-    console.log(JSON.stringify(e));
     res.status(500).send(e.message);
     return;
   }
@@ -454,8 +453,7 @@ async function getMetafieldDefinitionsForShop(session) {
   return metaFieldDefinitions;
 }
 
-async function getAppInstallationIdForShop(shop = "markusvoigt.myshopify.com") {
-  const session = await getSessionForShop(shop);
+async function getAppInstallationIdForShop(session) {
   const client = new shopify.api.clients.Graphql({
     session,
   });
@@ -465,11 +463,7 @@ async function getAppInstallationIdForShop(shop = "markusvoigt.myshopify.com") {
   return response.body.data.currentAppInstallation.id;
 }
 
-async function writeMetaFieldsForShop(
-  shop = "markusvoigt.myshopify.com",
-  metaFieldDefinitions
-) {
-  const session = await getSessionForShop(shop);
+async function writeMetaFieldsForShop(session, metaFieldDefinitions) {
   const client = new shopify.api.clients.Graphql({
     session,
   });

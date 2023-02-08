@@ -32,7 +32,6 @@ const options = [
 export function MetafieldForm({ Metafield: InitialMetafield }) {
   const [Metafield, setMetafield] = useState(InitialMetafield);
   const navigate = useNavigate();
-  const appBridge = useAppBridge();
   const fetch = useAuthenticatedFetch();
 
   const onSubmit = useCallback(
