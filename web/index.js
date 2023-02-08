@@ -467,7 +467,7 @@ async function writeMetaFieldsForShop(session, metaFieldDefinitions) {
   const client = new shopify.api.clients.Graphql({
     session,
   });
-  const appInstallationID = await getAppInstallationIdForShop(shop);
+  const appInstallationID = await getAppInstallationIdForShop(session);
   try {
     const response = await client.query({
       data: {
